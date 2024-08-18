@@ -3,11 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-// import { useSelector } from 'react-redux';
 import { Loader2 } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
-// import { RootState } from '@/store';
 
 interface LoginInput {
   email: string;
@@ -22,7 +20,6 @@ const Login = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  // const { user } = useSelector((store: RootState) => store.auth);
 
   const changeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -43,7 +40,7 @@ const Login = () => {
         }
       );
       if (res.data.success) {
-        navigate("/login");
+        navigate("/");
         toast.success(res.data.message);
         setInput({
           email: "",
@@ -59,7 +56,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center w-screen h-screen justify-center">
+    <div className="flex items-center h-screen justify-center">
       <form
         onSubmit={signUpHandler}
         className="shadow-lg flex flex-col gap-5 p-8"
