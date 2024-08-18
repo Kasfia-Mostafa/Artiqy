@@ -5,39 +5,45 @@ import "../../Styles/underline.css";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
+import CreatePost from "../Feed/CreatePost";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
+  const axiosPublic = useAxiosPublic();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
   };
 
+  const openSidebar = () => {
+    setIsOpen(true);
+  };
+
   //* Logout
   const logoutHandler = async () => {
     try {
-        const res = await 
-  axios.get( "http://localhost:5000/api/user/logout", 
-          { withCredentials: true });
-        if (res.data.success) {
-            // dispatch(setAuthUser(null));
-            // dispatch(setSelectedPost(null));
-            // dispatch(setPosts([]));
-            navigate("/login");
-            toast.success(res.data.message);
-        }
-    }catch (error) {
+      const res = await axiosPublic.get("/user/logout", {
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        // dispatch(setAuthUser(null));
+        // dispatch(setSelectedPost(null));
+        // dispatch(setPosts([]));
+        navigate("/login");
+        toast.success(res.data.message);
+      }
+    } catch (error) {
       console.error("Logout failed:", error);
       if (axios.isAxiosError(error)) {
-          console.error("Axios error:", error.response?.data);
+        console.error("Axios error:", error.response?.data);
       } else {
-          const err = error as Error; 
-          console.error(err.message);
+        const err = error as Error;
+        console.error(err.message);
       }
-  }
-  
-}
+    }
+  };
 
   return (
     <div className="flex">
@@ -47,12 +53,15 @@ const Sidebar: React.FC = () => {
         onClick={toggleSidebar}
       >
         {isOpen ? (
-            <img
+          <img
             className="size-6"
             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAACXBIWXMAAAsTAAALEwEAmpwYAAABKklEQVR4nM2WUU7DMAyGcy4YEi/sDGggddfB7vM0LrA/3T2AcYPau8W67QUkWOiKWmjVakmmRbIU1ZK/Ovnt2JjjIs0eWfFOgj2r/fIxEuxJ7SpV+1DFP0Lss29w7jTMa5nEgtgyQ8XEZbOKDWLBqwlxJ9wP2pnoEC3tMkAk+CTBlBRjUhQtl1w4H0uWsOLDBzStSiDNl6M6jBTFk+Cm8pewU0GKcb3eKpgzt2/4dHHnA/ofMF+O2r6xYuMlBlK75TVuG62ktii3132QwarrgtFAiDcoXeMqGKjv6NKBsGBioJY6iyJvcoV78tFJlnT9Nf2BeRXsT1uRLInegjigmbOB6FwPHwneYoNI7ItxI1H8jOx9KU3FPCJk1myQiombVkINkC7WbyYHwDfvQCGxDvHGFgAAAABJRU5ErkJggg=="
           />
         ) : (
-          <img className="size-6" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABD0lEQVR4nO3WzUoCYRgF4LkIJ5qoqCgsKiqSis8byK6uKSIiIiJCQiQiIkIkRMTGG3DK32bsf0od3R+haDmTuOnDzgPv/hx4F0dRiIiI+oXItjfChmuHjRZ+O5F1sZZpYjXdwEqqjtDNJ5aTH1hKOFi8fsfC1RvmL18xd/GC2fNnzJw9YTr+iGCshqnTGiajNiZOLIwfP2DsqIrRwwpGDsoY3i9haK8IbbeAwZ17DGzfQdXN79vM24EtM+JZQOrw+s/lLZ8Csoc3v67nAjKEV/0LeL+QLOFV3xfKtSPi1rVkDq/q5rpnASKivyW4hRxuIY1byOAWArcQEf1TglvI4RbSuIUMbiFwCxERESnd6QAvOAk1rIvKdgAAAABJRU5ErkJggg=="/>
+          <img
+            className="size-6"
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABD0lEQVR4nO3WzUoCYRgF4LkIJ5qoqCgsKiqSis8byK6uKSIiIiJCQiQiIkIkRMTGG3DK32bsf0od3R+haDmTuOnDzgPv/hx4F0dRiIiI+oXItjfChmuHjRZ+O5F1sZZpYjXdwEqqjtDNJ5aTH1hKOFi8fsfC1RvmL18xd/GC2fNnzJw9YTr+iGCshqnTGiajNiZOLIwfP2DsqIrRwwpGDsoY3i9haK8IbbeAwZ17DGzfQdXN79vM24EtM+JZQOrw+s/lLZ8Csoc3v67nAjKEV/0LeL+QLOFV3xfKtSPi1rVkDq/q5rpnASKivyW4hRxuIY1byOAWArcQEf1TglvI4RbSuIUMbiFwCxERESnd6QAvOAk1rIvKdgAAAABJRU5ErkJggg=="
+          />
         )}{" "}
         {/* Close icon or Hamburger icon */}
       </div>
@@ -115,6 +124,17 @@ const Sidebar: React.FC = () => {
               />
               <span className="underline-container ml-2 text-xl">
                 Profile
+                <span className="underline"></span>
+              </span>
+            </div>
+            <div onClick={openSidebar} className="flex items-center p-2 rounded-md  cursor-pointer">
+              <img
+                className="size-6"
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACrklEQVR4nO2Yz0/TYBjHe/ZE3zFINCZoRHECowUTz7LWA/MEXtRJ2yVkEQQOih48QLbgH6Am+wckUS+ePIksasJB+RF3oC9RDi0knkx03h/zvl1xM0zaTt+3i32SN1nbpPt83uf7vt0qCC1Qkpo9JaX0N7KiVeSU9vyCmkVCq1T/cOa0rGh7sqLD/kjpG+eHMzEh7DV0yTjjwkspfdk51nH1eC3UnRj6DX4wPXGEnJdSxlFXgsRJaCV4twbV8R7nmvZd+FO1be9eFrG1ImLrB8I2sBidbzcgOTZNs57I3v8aXy2P1jIRGSLlrAet1BBeNK1FVtDoIPjJPMTKO/S8aNqFA+D3yO7UcOZZw3fUwufmIfbxc9110glZ0V/R6Cjal4GLeqLx7GNrJUzwsfIOjZMn+KpAhRn8u83D4acK4BmeFFP4KzOe4JOjU+AJnpWAX/jO0jp4gmchEAQeYTscAkHhURgEmoFHvAWahUc8Bf4GPOIl0LFart/nqz8P6uAn8w782DR9qDW6F3sB04LEzYX9PyK9mTlo/7AVCB7xEDj2olSNxS3ou3GXfu67Pgfx91u+4REPgbMzixTwxKMliK+Z0Dt+z5G4dgfO5RYOzTxXATKjsmqANDIB8XVMz5H4kBi5kUp6nHkuAt2FIoXsnn9Mj4nEyYdLNE5B4BFLgfbNTzCQztEOHH/ykkqQTrgzTxY22Z2Qz/syE+gqPnNgVePXqxDVgJ7ZB3Rhk90pyH0FVgJkkbrgpBMkTn7jgngKkIj0X70NXcWnNE7N3g+xFvhXQ4gEcNQBiCLkpXhHBUWLGPOfbRRto5j/jKP/9kEmMny5izwO0bS/+RF4HToBbC17Fmjb3k2HT8Ae8SxAu2DahRDFJ+8LvrYTpHU81oSIrYrz3T5nPqqoohJaqn4CiniFdVLs//QAAAAASUVORK5CYII="
+              />
+              <span className="underline-container ml-2 text-xl">
+                Create
+                <CreatePost open={isOpen} setOpen={setIsOpen} />
                 <span className="underline"></span>
               </span>
             </div>

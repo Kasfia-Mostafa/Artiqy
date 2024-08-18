@@ -2,11 +2,11 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 // import { useSelector } from 'react-redux';
 import { Loader2 } from 'lucide-react';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { toast } from 'sonner';
+import useAxiosPublic from '../Hooks/useAxiosPublic';
 // import { RootState } from '@/store'; 
 
 interface SignUpInput {
@@ -16,6 +16,7 @@ interface SignUpInput {
 }
 
 const SignUp = () => {
+  const axiosPublic = useAxiosPublic()
     const [input, setInput] = useState<SignUpInput>({
         username: '',
         email: '',
@@ -34,7 +35,7 @@ const SignUp = () => {
         e.preventDefault();
         try {
             setLoading(true);
-            const res = await axios.post('http://localhost:5000/api/user/register', input, {
+            const res = await axiosPublic.post('/user/register', input, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

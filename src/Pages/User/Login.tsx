@@ -2,10 +2,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "sonner";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
+import { useDispatch } from "react-redux";
+import { setAuthUser } from "@/redux/authSlice";
 
 interface LoginInput {
   email: string;
@@ -13,6 +15,8 @@ interface LoginInput {
 }
 
 const Login = () => {
+  const axiosPublic = useAxiosPublic()
+  const dispatch = useDispatch()
   const [input, setInput] = useState<LoginInput>({
     email: "",
     password: "",
@@ -29,8 +33,8 @@ const Login = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await axios.post(
-        "http://localhost:5000/api/user/login",
+      const res = await axiosPublic.post(
+        "/user/login",
         input,
         {
           headers: {
@@ -40,6 +44,7 @@ const Login = () => {
         }
       );
       if (res.data.success) {
+        dispatch(setAuthUser (res.data.user));
         navigate("/");
         toast.success(res.data.message);
         setInput({
