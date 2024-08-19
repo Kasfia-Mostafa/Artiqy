@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 import { readFileAsDataURL } from "@/lib/utils";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
 import { setPosts } from "@/redux/postSlice";
 import { RootState } from "@/redux/store"; // Adjust the import path as necessary
 
@@ -23,6 +21,7 @@ const CreatePost: React.FC = () => {
   const [caption, setCaption] = useState<string>("");
   const [imagePreview, setImagePreview] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false); // State for dialog visibility
   const { user } = useSelector((store: RootState) => store.auth);
   const { posts } = useSelector((store: RootState) => store.post);
   const dispatch = useDispatch();
@@ -53,6 +52,7 @@ const CreatePost: React.FC = () => {
       if (res.data.success) {
         dispatch(setPosts([res.data.post, ...posts]));
         toast.success(res.data.message);
+        setIsOpen(false); // Close the dialog after successful post creation
       }
     } catch (error: any) {
       toast.error(error.response?.data?.message || "An error occurred");
@@ -63,8 +63,8 @@ const CreatePost: React.FC = () => {
 
   return (
     <div>
-      <Dialog>
-        <DialogTrigger>Create</DialogTrigger>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}> {/* Manage dialog visibility */}
+        <DialogTrigger onClick={() => setIsOpen(true)}>Create</DialogTrigger>
         <DialogContent className="bg-wall p-8 rounded-lg">
           <DialogHeader className="text-center font-semibold text-xl text-slate-800">
             Create New Post

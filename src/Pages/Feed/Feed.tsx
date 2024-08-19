@@ -2,7 +2,7 @@ import Posts from "./Posts"
 
 const Feed = () => {
   return (
-    <div className="flex-1 my-8 flex-col items-center pl-[20%]">
+    <div className="my-6 lg:pl-12 pl-3">
       <Posts/>
     </div>
   )

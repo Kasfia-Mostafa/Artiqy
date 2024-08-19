@@ -65,25 +65,25 @@ const Post: React.FC<PostProps> = ({ post }) => {
     const inputText = e.target.value;
     setText(inputText.trim() ? inputText : "");
   };
-
   const likeOrDislikeHandler = async () => {
     try {
       const action = liked ? "dislike" : "like";
-      const res = await axiosPublic.get(`/post/${post._id}/${action}`, {
+      const res = await axiosPublic.post(`/post/${post._id}/${action}`, {}, {
         withCredentials: true,
       });
+  
       if (res.data.success) {
         const updatedLikes = liked ? postLike - 1 : postLike + 1;
         setPostLike(updatedLikes);
         setLiked(!liked);
-
+  
         const updatedPostData = posts.map((p) =>
           p._id === post._id
             ? {
                 ...p,
                 likes: liked
-                  ? p.likes.filter((id) => id !== user?._id)
-                  : [...p.likes, user!._id],
+                  ? p.likes.filter((id) => id !== user?._id) // Safely access user._id
+                  : [...p.likes, user!._id], // Assume user is defined when liking
               }
             : p
         );
@@ -91,9 +91,11 @@ const Post: React.FC<PostProps> = ({ post }) => {
         toast.success(res.data.message);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      toast.error("An error occurred while liking/disliking the post.");
     }
   };
+  
 
   const commentHandler = async () => {
     try {
@@ -157,11 +159,11 @@ const Post: React.FC<PostProps> = ({ post }) => {
 
   return (
     <div
-      className="flex flex-col w-full max-w-3xl gap-4 p-5 my-10
+      className="flex flex-col w-full lg:max-w-3xl gap-4 p-5 my-10 mx-2
      border-slate-50 rounded-md
      bg-[#a5e4df] text-sky-900"
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-2">
           <Avatar>
             <AvatarImage src={post.author?.profilePicture} alt="post_image" />
@@ -173,11 +175,11 @@ const Post: React.FC<PostProps> = ({ post }) => {
               />
             </AvatarFallback>
           </Avatar>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <h1 className="text-xl">{post.author?.username}</h1>
             {user?._id === post.author._id && (
               <Badge variant="secondary">
-                <span className="pr-1 text-sky-900">Author</span>
+                <span className="pr-1 w-12 lg:w-10 text-sky-900">Author</span>
                 <img
                   className="size-4"
                   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADzklEQVR4nO2Z3UtUQRTA960gqD8hKCOC6sHMsDLJytIy+0ayMtdt3Tuza0UkYmUR0ReGWiGmmHtmkyKrpyBfCtIIoi/qIcryY2eWeojopR6K8MTM+hW51+u9e/eysAcOXHbn43fmzMeZMy5XSlKSEkuiieBiylkn5YxTzt4RAa1EBHcEekMzR8rIb/mb/E+WGS7bSfmNRS4nhURCayhnP6lgOIH+JgLeSpXfE5bh7Kdswxn4zzdmUw5fY8AbViLYt0A4ODeh8IHexmmEw0ur8HTECA4vZZsJgS8daJ9OONyJFzwdm06dsm3bwCtFxzzC2UkqWCTu8GLUE4JyqJV9xQ1ci7BCKlgP5TBkFzj9zxuqrx4agU2W4AlnxxMGLWJoGI6ZG/kBWEA5/HHcAA5/fJHQ/KmPvoBqx+FFVP2cVZkwgF12GpwOK+HQMGUDqGBtToPTMW0z44GORMD5PrXjKu9BzCGHdDzAQmYM6EqEAXknqjF9XRlmewI65eDBlOC9fbdnEcG+2w2/rf2sgl9a6EH3s+bYHhDs+/jodlKhHBrthi99fBUzNpRjep4bi+/VxW8h+wXLtfvUrXh/HbOKNTX6G+tqjdXjMCTZdOGPfGEziIB+O+EJZ5h7+IiCz9EOojYYNF5XQL9k1Js6AbunzubGUwp+2fYKPPC21cwA+GMaQAS7Zyd8yf16XJJXhunr3VjS1WjSg3BHxwPsrpFGcrRDmF0eQM+ra4Y7Ln/dgplFXjX6W1rOWJiCENsA6R4jjciDR4JkbvPi3odXJu+0P4jZnkpVZ21VlVyQ5j3JGdVdxFRA32SN+D6249qjRxXQkg1u3MHO6ZbPP12jyi4vIejrvW5hGkKf7iKWoongakPbaBiwsD66IKXmnzmGZPD/kd3ZcT5qaEE57n/SZGHkYUiy6cKPTSVoMNrwzpsXogfSujK1PY4f4f1PmzBjo0f9t+vWxcRFpAGViDIeSux7dEVtixJ0xV6K7ufNWPGhDbN2k6h3zh63Bi+mGEqYCebkjrSy1D+6uGV0Kb9XHahEbcDCohUmgjmz4fT4xa0MKfKq7dMaPDMXTpu+0IQBN12qxcytXtxj8rCicbrQJPeVkiT7pV5L9rSKFJlUctoAIkI1LitCBBQQAd2JTi0SAd1+Ecy3BP+PIZylycSrSsDanNwlnKW5ki29Tji7bWt63c4HDirYi4Q9cNjxxKSFO+a4nJBoBmPiRz4i4Bfl7I3SGI98hMOPSTMNdot8KpXzl3IYHH5CbZnwmTUS2kU5wLBBA7KOj7OFjsKnJCWu5Je/llxZrtxv+7cAAAAASUVORK5CYII="
@@ -188,13 +190,13 @@ const Post: React.FC<PostProps> = ({ post }) => {
         </div>
         <Dialog>
           <DialogTrigger asChild>
-            <MoreHorizontal className="cursor-pointer" />
+            <MoreHorizontal className="cursor-pointer ml-4" />
           </DialogTrigger>
-          <DialogContent className="flex flex-col items-center text-sm text-center bg-feed text-sky-900">
+          <DialogContent className="flex flex-col items-center text-sm text-center bg-feed">
             {post.author._id !== user?._id && (
               <Button
                 variant="ghost"
-                className="cursor-pointer w-fit text-[#ED4956] font-bold"
+                className="cursor-pointer text-red-500 hover:text-red-500 mt-6 hover:bg-logo w-full"
               >
                 Unfollow
               </Button>
@@ -275,7 +277,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
           placeholder="Add a comment..."
           value={text}
           onChange={changeEventHandler}
-          className="outline-none text-sm w-full"
+          className="text-sm w-full"
         />
         {text && (
           <span

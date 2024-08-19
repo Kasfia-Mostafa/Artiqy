@@ -7,12 +7,16 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 import CreatePost from "../Feed/CreatePost";
+import { setPosts, setSelectedPost } from "@/redux/postSlice";
+import { useDispatch } from "react-redux";
+import { setAuthUser } from "@/redux/authSlice";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);

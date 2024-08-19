@@ -45,9 +45,13 @@ const postSlice = createSlice({
     setSelectedPost: (state, action: PayloadAction<Post | null>) => {
       state.selectedPost = action.payload;
     },
+    resetState: (state) => {
+      state.posts = [];
+      state.selectedPost = null;
+    },
   },
 });
 
-// Export actions and reducer
-export const { setPosts, setSelectedPost } = postSlice.actions;
+// Dispatch resetState when logging out
+export const { setPosts, setSelectedPost, resetState } = postSlice.actions;
 export default postSlice.reducer;
