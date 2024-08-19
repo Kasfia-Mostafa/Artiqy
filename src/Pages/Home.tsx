@@ -2,8 +2,8 @@ import Feed from "./Feed/Feed";
 
 const Home = () => {
   return (
-    <div className="flex">
-      <div className="flex-grow">
+    <div className="">
+      <div className="">
         <Feed />
       </div>
       {/* RightSidebar */}

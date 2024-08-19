@@ -19,7 +19,10 @@ module.exports = {
     extend: {
       colors: {
         logo: '#84ded5',
-        wall: '#dff3f1',
+        wall: '#e0fbfc',
+        feed: '#daffec',
+        feed2: '#ddfff7',
+        main: '#e8fbfc',
       },
       fontFamily: {
         itim: ['Itim', 'cursive'],

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import Post from "./Post";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import Post from "./Post";
 
 const Posts: React.FC = () => {
   

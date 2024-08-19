@@ -12,13 +12,14 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
   };
 
   const openSidebar = () => {
-    setIsOpen(true);
+    setOpen(true);
   };
 
   //* Logout
@@ -62,15 +63,15 @@ const Sidebar: React.FC = () => {
             className="size-6"
             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABD0lEQVR4nO3WzUoCYRgF4LkIJ5qoqCgsKiqSis8byK6uKSIiIiJCQiQiIkIkRMTGG3DK32bsf0od3R+haDmTuOnDzgPv/hx4F0dRiIiI+oXItjfChmuHjRZ+O5F1sZZpYjXdwEqqjtDNJ5aTH1hKOFi8fsfC1RvmL18xd/GC2fNnzJw9YTr+iGCshqnTGiajNiZOLIwfP2DsqIrRwwpGDsoY3i9haK8IbbeAwZ17DGzfQdXN79vM24EtM+JZQOrw+s/lLZ8Csoc3v67nAjKEV/0LeL+QLOFV3xfKtSPi1rVkDq/q5rpnASKivyW4hRxuIY1byOAWArcQEf1TglvI4RbSuIUMbiFwCxERESnd6QAvOAk1rIvKdgAAAABJRU5ErkJggg=="
           />
-        )}{" "}
-        {/* Close icon or Hamburger icon */}
+        )}
       </div>
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-screen w-64 bg-wall transition-transform transform ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 lg:static lg:w-64`}
+        className={`fixed top-0 left-0 h-screen w-64 bg-wall transition-transform transform 
+           ${
+             isOpen ? "translate-x-0" : "-translate-x-full"
+           } lg:translate-x-0 lg:static lg:w-64`}
       >
         <div className="p-5 text-sky-800">
           <div className="flex justify-between items-center">
@@ -127,14 +128,16 @@ const Sidebar: React.FC = () => {
                 <span className="underline"></span>
               </span>
             </div>
-            <div onClick={openSidebar} className="flex items-center p-2 rounded-md  cursor-pointer">
+            <div
+              onClick={openSidebar}
+              className="flex items-center p-2 rounded-md  cursor-pointer"
+            >
               <img
                 className="size-6"
                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACrklEQVR4nO2Yz0/TYBjHe/ZE3zFINCZoRHECowUTz7LWA/MEXtRJ2yVkEQQOih48QLbgH6Am+wckUS+ePIksasJB+RF3oC9RDi0knkx03h/zvl1xM0zaTt+3i32SN1nbpPt83uf7vt0qCC1Qkpo9JaX0N7KiVeSU9vyCmkVCq1T/cOa0rGh7sqLD/kjpG+eHMzEh7DV0yTjjwkspfdk51nH1eC3UnRj6DX4wPXGEnJdSxlFXgsRJaCV4twbV8R7nmvZd+FO1be9eFrG1ImLrB8I2sBidbzcgOTZNs57I3v8aXy2P1jIRGSLlrAet1BBeNK1FVtDoIPjJPMTKO/S8aNqFA+D3yO7UcOZZw3fUwufmIfbxc9110glZ0V/R6Cjal4GLeqLx7GNrJUzwsfIOjZMn+KpAhRn8u83D4acK4BmeFFP4KzOe4JOjU+AJnpWAX/jO0jp4gmchEAQeYTscAkHhURgEmoFHvAWahUc8Bf4GPOIl0LFart/nqz8P6uAn8w782DR9qDW6F3sB04LEzYX9PyK9mTlo/7AVCB7xEDj2olSNxS3ou3GXfu67Pgfx91u+4REPgbMzixTwxKMliK+Z0Dt+z5G4dgfO5RYOzTxXATKjsmqANDIB8XVMz5H4kBi5kUp6nHkuAt2FIoXsnn9Mj4nEyYdLNE5B4BFLgfbNTzCQztEOHH/ykkqQTrgzTxY22Z2Qz/syE+gqPnNgVePXqxDVgJ7ZB3Rhk90pyH0FVgJkkbrgpBMkTn7jgngKkIj0X70NXcWnNE7N3g+xFvhXQ4gEcNQBiCLkpXhHBUWLGPOfbRRto5j/jKP/9kEmMny5izwO0bS/+RF4HToBbC17Fmjb3k2HT8Ae8SxAu2DahRDFJ+8LvrYTpHU81oSIrYrz3T5nPqqoohJaqn4CiniFdVLs//QAAAAASUVORK5CYII="
               />
               <span className="underline-container ml-2 text-xl">
-                Create
-                <CreatePost open={isOpen} setOpen={setIsOpen} />
+                <CreatePost open={open} setOpen={setOpen} />
                 <span className="underline"></span>
               </span>
             </div>

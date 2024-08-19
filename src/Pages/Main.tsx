@@ -4,7 +4,7 @@ import Sidebar from './Sidebar/Sidebar';
 
 const Main: React.FC = () => {
   return (
-    <div className="flex font-itim text-lg font-normal" >
+    <div className="flex font-itim text-lg bg-main" >
      <Sidebar/>
       <div className="flex-1">
        <Outlet></Outlet>
