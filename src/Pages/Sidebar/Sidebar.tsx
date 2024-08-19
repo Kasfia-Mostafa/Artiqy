@@ -33,16 +33,17 @@ const Sidebar: React.FC = () => {
         withCredentials: true,
       });
       if (res.data.success) {
-        // dispatch(setAuthUser(null));
-        // dispatch(setSelectedPost(null));
-        // dispatch(setPosts([]));
+        dispatch(setAuthUser(null));
+        dispatch(setSelectedPost(null));
+        dispatch(setPosts([]));
         navigate("/login");
         toast.success(res.data.message);
       }
     } catch (error) {
       console.error("Logout failed:", error);
       if (axios.isAxiosError(error)) {
-        console.error("Axios error:", error.response?.data);
+        console.error("Axios error:",
+           error.response?.data);
       } else {
         const err = error as Error;
         console.error(err.message);

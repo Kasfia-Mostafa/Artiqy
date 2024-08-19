@@ -63,7 +63,7 @@ const CreatePost: React.FC = () => {
 
   return (
     <div>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}> {/* Manage dialog visibility */}
+      <Dialog open={isOpen} onOpenChange={setIsOpen}> 
         <DialogTrigger onClick={() => setIsOpen(true)}>Create</DialogTrigger>
         <DialogContent className="bg-wall p-8 rounded-lg">
           <DialogHeader className="text-center font-semibold text-xl text-slate-800">
