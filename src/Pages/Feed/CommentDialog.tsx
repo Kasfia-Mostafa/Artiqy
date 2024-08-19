@@ -51,7 +51,7 @@ const CommentDialog: React.FC<CommentDialogProps> = ({ open, setOpen }) => {
   const { selectedPost, posts } = useSelector((store: any) => store.post);
   const [comment, setComment] = useState<Comment[]>([]);
   const dispatch = useDispatch();
-  const axiosPublic=useAxiosPublic()
+  const axiosPublic = useAxiosPublic();
 
   useEffect(() => {
     if (selectedPost) {
@@ -113,7 +113,7 @@ const CommentDialog: React.FC<CommentDialogProps> = ({ open, setOpen }) => {
             <div className="w-1/2 flex flex-col justify-between">
               <div className="flex items-center justify-between p-4">
                 <div className="flex gap-3 items-center">
-                  <Link>
+                  <Link to={`/profile/${selectedPost?.author?._id}`}>
                     <Avatar>
                       <AvatarImage src={selectedPost?.author?.profilePicture} />
                       <AvatarFallback>
@@ -165,7 +165,6 @@ const CommentDialog: React.FC<CommentDialogProps> = ({ open, setOpen }) => {
                     value={text}
                     onChange={changeEventHandler}
                     placeholder="Add a comment..."
-                    // className="w-full outline-none border text-sm border-gray-300 p-2 rounded"
                   />
                   <Button
                     disabled={!text.trim()}

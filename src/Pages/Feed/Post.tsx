@@ -58,8 +58,6 @@ const Post: React.FC<PostProps> = ({ post }) => {
   const [postLike, setPostLike] = useState<number>(post.likes.length);
   const [comment, setComment] = useState<Comment[]>(post.comments);
 
-  console.log("User:", user);
-
   const changeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const inputText = e.target.value;
     setText(inputText.trim() ? inputText : "");

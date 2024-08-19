@@ -15,7 +15,7 @@ const Posts: React.FC = () => {
   return (
     <div>
       {posts.map((post: any) => (
-        <Post post={post} key={post.id} />
+        <Post post={post} key={post._id} />
       ))}
     </div>
   );

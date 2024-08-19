@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,13 +16,17 @@ import { toast } from "sonner";
 import { setPosts } from "@/redux/postSlice";
 import { RootState } from "@/redux/store"; // Adjust the import path as necessary
 
-const CreatePost: React.FC = () => {
+interface CreatePostProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const CreatePost: React.FC<CreatePostProps> = ({ open, setOpen }) => {
   const imageRef = useRef<HTMLInputElement | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [caption, setCaption] = useState<string>("");
   const [imagePreview, setImagePreview] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false); // State for dialog visibility
   const { user } = useSelector((store: RootState) => store.auth);
   const { posts } = useSelector((store: RootState) => store.post);
   const dispatch = useDispatch();
@@ -33,6 +38,9 @@ const CreatePost: React.FC = () => {
       setFile(selectedFile);
       const dataUrl = await readFileAsDataURL(selectedFile);
       setImagePreview(dataUrl);
+    } else {
+      setFile(null);
+      setImagePreview("");
     }
   };
 
@@ -41,6 +49,7 @@ const CreatePost: React.FC = () => {
     const formData = new FormData();
     formData.append("caption", caption);
     if (file) formData.append("image", file);
+    
     try {
       setLoading(true);
       const res = await axiosPublic.post("/post/addpost", formData, {
@@ -49,10 +58,14 @@ const CreatePost: React.FC = () => {
         },
         withCredentials: true,
       });
+      
       if (res.data.success) {
         dispatch(setPosts([res.data.post, ...posts]));
         toast.success(res.data.message);
-        setIsOpen(false); // Close the dialog after successful post creation
+        setCaption(""); 
+        setImagePreview(""); 
+        setFile(null); 
+        setOpen(false); 
       }
     } catch (error: any) {
       toast.error(error.response?.data?.message || "An error occurred");
@@ -63,8 +76,8 @@ const CreatePost: React.FC = () => {
 
   return (
     <div>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}> 
-        <DialogTrigger onClick={() => setIsOpen(true)}>Create</DialogTrigger>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger onClick={() => setOpen(true)}>Create</DialogTrigger>
         <DialogContent className="bg-wall p-8 rounded-lg">
           <DialogHeader className="text-center font-semibold text-xl text-slate-800">
             Create New Post
@@ -90,6 +103,7 @@ const CreatePost: React.FC = () => {
           <Textarea
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
+            disabled={loading} // Disable when loading
             className="focus-visible:ring-transparent border-none bg-slate-50 text-slate-800"
             placeholder="Write a caption..."
           />
@@ -121,34 +135,33 @@ const CreatePost: React.FC = () => {
               </span>
               Select Photo
             </Button>
-            {imagePreview &&
-              (loading ? (
-                <Button
-                  disabled
-                  className="group relative z-10 h-8 w-28 overflow-hidden rounded-md bg-sky-700 text-sm text-white"
-                >
-                  <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-white transition-transform duration-700 group-hover:scale-x-100 group-hover:duration-300"></span>
-                  <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-sky-700 transition-transform duration-500 group-hover:scale-x-100 group-hover:duration-700"></span>
-                  <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-sky-900 transition-transform duration-300 group-hover:scale-x-50 group-hover:duration-500"></span>
-                  <span className="absolute z-10 text-center text-white opacity-0 duration-100 ease-out group-hover:opacity-100 group-hover:duration-700">
-                    Please wait...
-                  </span>
+            {imagePreview && (loading ? (
+              <Button
+                disabled
+                className="group relative z-10 h-8 w-28 overflow-hidden rounded-md bg-sky-700 text-sm text-white"
+              >
+                <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-white transition-transform duration-700 group-hover:scale-x-100 group-hover:duration-300"></span>
+                <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-sky-700 transition-transform duration-500 group-hover:scale-x-100 group-hover:duration-700"></span>
+                <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-sky-900 transition-transform duration-300 group-hover:scale-x-50 group-hover:duration-500"></span>
+                <span className="absolute z-10 text-center text-white opacity-0 duration-100 ease-out group-hover:opacity-100 group-hover:duration-700">
                   Please wait...
-                </Button>
-              ) : (
-                <Button
-                  onClick={createPostHandler}
-                  className="group relative z-10 h-8 w-28 overflow-hidden rounded-md bg-sky-700 text-sm text-white"
-                >
-                  <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-white transition-transform duration-700 group-hover:scale-x-100 group-hover:duration-300"></span>
-                  <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-sky-700 transition-transform duration-500 group-hover:scale-x-100 group-hover:duration-700"></span>
-                  <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-sky-900 transition-transform duration-300 group-hover:scale-x-50 group-hover:duration-500"></span>
-                  <span className="absolute z-10 text-center text-white opacity-0 duration-100 ease-out group-hover:opacity-100 group-hover:duration-700">
-                    Share Now
-                  </span>
+                </span>
+                Please wait...
+              </Button>
+            ) : (
+              <Button
+                onClick={createPostHandler}
+                className="group relative z-10 h-8 w-28 overflow-hidden rounded-md bg-sky-700 text-sm text-white"
+              >
+                <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-white transition-transform duration-700 group-hover:scale-x-100 group-hover:duration-300"></span>
+                <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-sky-700 transition-transform duration-500 group-hover:scale-x-100 group-hover:duration-700"></span>
+                <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-sky-900 transition-transform duration-300 group-hover:scale-x-50 group-hover:duration-500"></span>
+                <span className="absolute z-10 text-center text-white opacity-0 duration-100 ease-out group-hover:opacity-100 group-hover:duration-700">
                   Share Now
-                </Button>
-              ))}
+                </span>
+                Share Now
+              </Button>
+            ))}
           </div>
         </DialogContent>
       </Dialog>
