@@ -1,5 +1,6 @@
 import Home from "@/Pages/Home";
 import Main from "@/Pages/Main";
+import EditProfile from "@/Pages/Profile/EditProfile";
 import Profile from "@/Pages/Profile/Profile";
 import Suggestions from "@/Pages/RightSide/Suggestions";
 import Login from "@/Pages/User/Login";
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
       {
         path: "/profile/:id",
         element: <Profile/>,
+      },
+      {
+        path: "/profile/edit",
+        element: <EditProfile/>,
       },
       {
         path: "/suggestions",

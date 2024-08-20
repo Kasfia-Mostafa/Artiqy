@@ -4,8 +4,16 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface User {
   _id: string;
   username: string;
+  email: string;
+  gender?: string;
   profilePicture?: string;
-  // Add other relevant fields as needed
+  bio?: string;
+  bookmarks: never[];
+  followers: string[];
+  following: [];
+  posts: [];
+  likes?: string[]; 
+  comments?: string[];
 }
 
 // Define the initial state interface
