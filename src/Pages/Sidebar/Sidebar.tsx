@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import Artiqy from "../../assets/Artiqy.png";
 import "../../Styles/logout.css";
 import "../../Styles/underline.css";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 import CreatePost from "../Feed/CreatePost";
 import { setPosts, setSelectedPost } from "@/redux/postSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAuthUser } from "@/redux/authSlice";
 
 const Sidebar: React.FC = () => {
@@ -17,6 +18,8 @@ const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
+  const user = useSelector((state: any) => state.auth.user);
+
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
@@ -71,11 +74,11 @@ const Sidebar: React.FC = () => {
       </div>
 
       {/* Sidebar */}
-      <div className="fixed">
+      <div className="fixd">
         <div
-          className={`top-0 left-0 h-screen w-64 bg-wall transition-transform transform 
+          className={`top-0 left-0 h-screen w-64 bg-wall transition-transform transform
           ${isOpen ? "translate-x-0" : "-translate-x-full"} 
-          lg:translate-x-0 lg:static lg:w-64 z-50`}
+          lg:translate-x-0 lg:static lg:w-72 z-50`}
         >
           <div className="p-5 text-sky-800">
             <div className="flex justify-between items-center">
@@ -111,27 +114,37 @@ const Sidebar: React.FC = () => {
 
             {/* Menu Items */}
             <div className="space-y-4 mt-6">
-              <div className="flex items-center p-2 rounded-md  cursor-pointer">
-                <img
-                  className="size-6"
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADSklEQVR4nO2U708bdRzHL/Ghcf+GD/eERKfoJguFskKvHW2F/uDaQccsCDgiEFY3cIMpGoWkmBH8sbkMdu3d0Q7SLeicIybzsQ/2x9wlL3MmSxrlFu5G+y2GV/J68Pl+v/fO+5vLnSQd8z8m/jMnEnd4XTqKJAzkqMp4pGhNKBrt0lFCKROWiwz4NpFtQyqDyTIB6Sig6FYkpFmpjg0zWGtItQYVw+z49/mUbo18qFnjLxzQyIlpLknSQAX5vE6ic5Pu/exVSSsGXbXPJDQmas/Ys5jyBnJII+7bIPAyIypKWsf/4rm4xnjtvj03vHxaIxRWrWTHPfPcQYzcZ0DRzH8+7HjJGqvds+eGlld0gr0qcf8GfjdGVVKZCmeTGqO16/bcsPIZA1kuWn0+1ez0YlSzUv2alatdi2tWYy6Q0egJl4h1FvG9ioEi/to5sdWAv5Bi0B0pEfOrtB+2SYOP6lo+XSYQKxMJFDlbD1M6l+pavlcn4ldpq5dJneH6lNfNQLhknu/aND+op5H7VvSCwZlDLX/RoKtfJxxQOd0I+3UiQxVOH0r5XJWOvgpyV4n3G2mySvjjXVpfqfwnD2lPPaAnoNMqwswO8vQTTnkqP/srbekdAt0l3hXp4DbB/K7LS3z+O21jG1YsWzDDl1asmEizBTM8VrT65g76JpZ+48z0XZKzNxi9cZX565+xKNKFa8zNLjJ6ZQNl6SlvvbT8l39yalIjlL/OyNI0a8tTbC9P8otQp9j+aoZb+QVGZnSiX+9xct/yy884ceUJPblVehaucXV5kgeFYaxCFoQ6jGV3sTvZ3eb/QFbhtf9cYP05b8zt0T3xLaEv8syvXKa6OgTN4MplqnYnu9viM4L7XsDm+784ubpFZv07vrl9k8c/fgrN4O2bPLY7FQwurD/nTemglC9CMyh55eEUNIOSV3bz0AxKXnk0A82g5JXqJDSDkld2xqAZlLxSyUEzKHllKwtuNYZ4xylPz9LqJVPyip4Bt4rIdKSUBLeKyHRE7QO3ish0ZLMX3Coi05F7QXCriExH7p4Dt4rIdOSOD9wqItORn9rArSIyHfnhPXCriExH1t8Gt4rIdGSthb21Fjiot1p4KiLzmGMk7/wNXrx+K0Y3yIkAAAAASUVORK5CYII="
-                />
-                <span className="underline-container ml-2 text-xl">
-                  Home
-                  <span className="underline"></span>
-                </span>
+              <Link to="/">
+                <div className="flex items-center p-2 rounded-md  cursor-pointer">
+                  <img
+                    className="size-6"
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADSklEQVR4nO2U708bdRzHL/Ghcf+GD/eERKfoJguFskKvHW2F/uDaQccsCDgiEFY3cIMpGoWkmBH8sbkMdu3d0Q7SLeicIybzsQ/2x9wlL3MmSxrlFu5G+y2GV/J68Pl+v/fO+5vLnSQd8z8m/jMnEnd4XTqKJAzkqMp4pGhNKBrt0lFCKROWiwz4NpFtQyqDyTIB6Sig6FYkpFmpjg0zWGtItQYVw+z49/mUbo18qFnjLxzQyIlpLknSQAX5vE6ic5Pu/exVSSsGXbXPJDQmas/Ys5jyBnJII+7bIPAyIypKWsf/4rm4xnjtvj03vHxaIxRWrWTHPfPcQYzcZ0DRzH8+7HjJGqvds+eGlld0gr0qcf8GfjdGVVKZCmeTGqO16/bcsPIZA1kuWn0+1ez0YlSzUv2alatdi2tWYy6Q0egJl4h1FvG9ioEi/to5sdWAv5Bi0B0pEfOrtB+2SYOP6lo+XSYQKxMJFDlbD1M6l+pavlcn4ldpq5dJneH6lNfNQLhknu/aND+op5H7VvSCwZlDLX/RoKtfJxxQOd0I+3UiQxVOH0r5XJWOvgpyV4n3G2mySvjjXVpfqfwnD2lPPaAnoNMqwswO8vQTTnkqP/srbekdAt0l3hXp4DbB/K7LS3z+O21jG1YsWzDDl1asmEizBTM8VrT65g76JpZ+48z0XZKzNxi9cZX565+xKNKFa8zNLjJ6ZQNl6SlvvbT8l39yalIjlL/OyNI0a8tTbC9P8otQp9j+aoZb+QVGZnSiX+9xct/yy884ceUJPblVehaucXV5kgeFYaxCFoQ6jGV3sTvZ3eb/QFbhtf9cYP05b8zt0T3xLaEv8syvXKa6OgTN4MplqnYnu9viM4L7XsDm+784ubpFZv07vrl9k8c/fgrN4O2bPLY7FQwurD/nTemglC9CMyh55eEUNIOSV3bz0AxKXnk0A82g5JXqJDSDkld2xqAZlLxSyUEzKHllKwtuNYZ4xylPz9LqJVPyip4Bt4rIdKSUBLeKyHRE7QO3ish0ZLMX3Coi05F7QXCriExH7p4Dt4rIdOSOD9wqItORn9rArSIyHfnhPXCriExH1t8Gt4rIdGSthb21Fjiot1p4KiLzmGMk7/wNXrx+K0Y3yIkAAAAASUVORK5CYII="
+                  />
+                  <span className="underline-container ml-2 text-xl">
+                    Home
+                    <span className="underline"></span>
+                  </span>
+                </div>
+              </Link>
+
+              {/* Profile */}
+              <div>
+              <Link to={`/profile/${user?._id}`}>
+                  <div className="flex items-center p-2 rounded-md cursor-pointer">
+                    <img
+                      className="size-6"
+                      src="https://img.icons8.com/3d-fluency/94/user-male-circle.png"
+                      alt="user-male-circle"
+                    />
+                    <span className="underline-container ml-2 text-xl">
+                      Profile
+                      <span className="underline"></span>
+                    </span>
+                  </div>
+                </Link>
               </div>
-              <div className="flex items-center p-2 rounded-md  cursor-pointer">
-                <img
-                  className="size-6"
-                  src="https://img.icons8.com/3d-fluency/94/user-male-circle.png"
-                  alt="user-male-circle"
-                />
-                <span className="underline-container ml-2 text-xl">
-                  Profile
-                  <span className="underline"></span>
-                </span>
-              </div>
+
+              {/* Message */}
               <div
                 onClick={openSidebar}
                 className="flex items-center p-2 rounded-md  cursor-pointer"
@@ -176,15 +189,21 @@ const Sidebar: React.FC = () => {
                   <span className="underline"></span>
                 </span>
               </div>
-              <div className="flex items-center p-2 rounded-md  cursor-pointer">
-                <img
-                  className="size-6"
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAChElEQVR4nO2Vy27TQBSGLZDoHnZQHoINQoI3ABsKYtkNLGkAVRVKymLGVCAEK3iMriFsaqcSuVBxmbFikhmDI4TYVDYLSFnQzaDjuhdIYo+dpLLQfNIvRc7Mmf/M5RxNUygUCoVC8R9R8qozldC+UwmsN5XQ3ooU/bZK8J9WZO6FtdlyYDuV0BbDVA4tshyundKKSMmrziSZP5hEIU+iHNq308zvJ7G2oBWNcmBvSCcQWK1DNWeyD5cRo+uIky0Q5rRmelT/K4HQ6sufgNXPGj83iNPHmFMxVIw8zJVAYP/IGj8XsDMjg8dCHr2U9wqZGeLnAo41dQFObRgLdT7rI0YZ4ucCc9JPX4D83CujoUVkyigSq8eyxs+FzAKY0b37DE0qKYl/GxnOGD9HArSWugAn1sE5sLtwReCew8OOHndgN+Hb7s6PEz8TUMrSFjA5uVjU+BFQyhKOd0UbEzzl+BFQyqAa7NzZSNbYO3OI8aVAQhzRm5/PG3X/qdHwW3q9t6nXe79jbUbfGv4TGANjtaJwfVUc1V/7N/VG76vR6AkZ7Yz1b8DcqZpD3fcnEScLmJNXmJPu7hEjRjuIk+qi0zaNut+RNT4o3737sW2Oio8ZuQUeMht/1Nk4gRh5jjjdHvXAFtuumGv6OY3va67pR7ESOvE2ZuQZct3jUuYfePQM4vRLUmlbcl1xZQLmjVgQa8ltJ3dkRr8hTs4mXxnPOZfWHZc7jrjampx5I9a1li/ud520rvwLMXphqPmVT+3TmJPvaY1l/q03cfNGrPl3XkpXjhQgz5kdSAAz+lJi8tTMG7FkPCBGXwwmIDGxKAlgToVKwFAn0JvsFVIoFAqFQqHQMvMH/avT6lZ4jNIAAAAASUVORK5CYII="
-                />
-                <span className="underline-container ml-2 text-xl">
-                  Suggestions
-                  <span className="underline"></span>
-                </span>
+
+              {/* Suggations */}
+              <div>
+                <Link to="/suggestions">
+                  <div className="flex items-center p-2 rounded-md  cursor-pointer">
+                    <img
+                      className="size-6"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAChElEQVR4nO2Vy27TQBSGLZDoHnZQHoINQoI3ABsKYtkNLGkAVRVKymLGVCAEK3iMriFsaqcSuVBxmbFikhmDI4TYVDYLSFnQzaDjuhdIYo+dpLLQfNIvRc7Mmf/M5RxNUygUCoVC8R9R8qozldC+UwmsN5XQ3ooU/bZK8J9WZO6FtdlyYDuV0BbDVA4tshyundKKSMmrziSZP5hEIU+iHNq308zvJ7G2oBWNcmBvSCcQWK1DNWeyD5cRo+uIky0Q5rRmelT/K4HQ6sufgNXPGj83iNPHmFMxVIw8zJVAYP/IGj8XsDMjg8dCHr2U9wqZGeLnAo41dQFObRgLdT7rI0YZ4ucCc9JPX4D83CujoUVkyigSq8eyxs+FzAKY0b37DE0qKYl/GxnOGD9HArSWugAn1sE5sLtwReCew8OOHndgN+Hb7s6PEz8TUMrSFjA5uVjU+BFQyhKOd0UbEzzl+BFQyqAa7NzZSNbYO3OI8aVAQhzRm5/PG3X/qdHwW3q9t6nXe79jbUbfGv4TGANjtaJwfVUc1V/7N/VG76vR6AkZ7Yz1b8DcqZpD3fcnEScLmJNXmJPu7hEjRjuIk+qi0zaNut+RNT4o3737sW2Oio8ZuQUeMht/1Nk4gRh5jjjdHvXAFtuumGv6OY3va67pR7ESOvE2ZuQZct3jUuYfePQM4vRLUmlbcl1xZQLmjVgQa8ltJ3dkRr8hTs4mXxnPOZfWHZc7jrjampx5I9a1li/ud520rvwLMXphqPmVT+3TmJPvaY1l/q03cfNGrPl3XkpXjhQgz5kdSAAz+lJi8tTMG7FkPCBGXwwmIDGxKAlgToVKwFAn0JvsFVIoFAqFQqHQMvMH/avT6lZ4jNIAAAAASUVORK5CYII="
+                    />
+                    <span className="underline-container ml-2 text-xl">
+                      Suggestions
+                      <span className="underline"></span>
+                    </span>
+                  </div>
+                </Link>
               </div>
             </div>
             <hr className="my-6 border-slate-300" />
