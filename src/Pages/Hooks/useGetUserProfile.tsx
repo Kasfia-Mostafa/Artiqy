@@ -13,7 +13,7 @@ const useGetUserProfile = (userId: string) => {
         const res = await axiosPublic.get(`/user/${userId}/profile`, {
           withCredentials: true,
         });
-        console.log(res.data); 
+        // console.log(res.data); 
         if (res.data.success) {
           dispatch(setUserProfile(res.data.user));
         }

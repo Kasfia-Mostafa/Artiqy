@@ -1,3 +1,4 @@
+import ChatPage from "@/Pages/Chat/ChatPage";
 import Home from "@/Pages/Home";
 import Main from "@/Pages/Main";
 import EditProfile from "@/Pages/Profile/EditProfile";
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
         path: "/suggestions",
         element: <Suggestions/>,
       },
+    {
+      path: "/chat",
+      element: <ChatPage/>,
+    },
     ],
   },
   {

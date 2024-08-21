@@ -41,8 +41,8 @@ interface SelectedPost {
 
 // Props for the CommentDialog component
 interface CommentDialogProps {
-  open: boolean; // Whether the dialog is open
-  setOpen: (open: boolean) => void; // Function to set the dialog state
+  open: boolean;
+  setOpen: (open: boolean) => void;
 }
 
 // CommentDialog component

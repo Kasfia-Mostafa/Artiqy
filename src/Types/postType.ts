@@ -49,8 +49,20 @@ export interface User {
   posts?: Post[]; 
   bookmarks?: Post[]; 
   gender?: string;
-
 }
 
 
+export interface SelectedUser {
+  _id: string;
+  profilePicture?: string;
+  username: string;
+}
+
+export interface Message {
+  _id: string;          // Unique identifier for the message
+  senderId: string;     // ID of the user who sent the message
+  receiverId: string;   // ID of the user who received the message
+  message: string;      // The content of the message
+  __v?: number;         // Optional version key (usually for versioning in MongoDB)
+}
 

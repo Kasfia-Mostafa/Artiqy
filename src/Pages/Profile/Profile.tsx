@@ -243,7 +243,7 @@ const Profile = () => {
             {userProfile?.username}
           </h1>
           <div>
-            {userProfile ? (
+            {isLoggedInUserProfile ? (
               <Badge variant="secondary">
                 <span className="pr-1 w-12 lg:w-10 text-sky-900">Author</span>
                 <img
@@ -323,9 +323,11 @@ const Profile = () => {
                     </Button>
                   </>
                 ) : (
-                  <Button className="bg-[#0095F6] hover:bg-[#3192d2] h-8">
-                    Follow
-                  </Button>
+                  <button className="text-md w-20 h-8 bg-teal-600 text-white relative overflow-hidden group z-10 hover:text-white duration-1000 rounded-md hover:cursor-pointer">
+                  <span className="absolute bg-teal-700 size-36 rounded-full group-hover:scale-100 scale-0 -z-10 -left-2 -top-10 group-hover:duration-500 duration-700 origin-center transform transition-all"></span>
+                  <span className="absolute bg-teal-900 size-36 -left-2 -top-10 rounded-full group-hover:scale-100 scale-0 -z-10 group-hover:duration-700 duration-500 origin-center transform transition-all"></span>
+                  Follow
+                </button>
                 )}
               </div>
             </div>

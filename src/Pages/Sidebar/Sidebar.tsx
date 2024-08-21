@@ -20,6 +20,7 @@ const Sidebar: React.FC = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.auth.user);
 
+  // console.log(user._id); // Example for logging the _id property
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
@@ -129,7 +130,7 @@ const Sidebar: React.FC = () => {
 
               {/* Profile */}
               <div>
-              <Link to={`/profile/${user?._id}`}>
+                <Link to={`/profile/${user?._id}`}>
                   <div className="flex items-center p-2 rounded-md cursor-pointer">
                     <img
                       className="size-6"
@@ -158,16 +159,20 @@ const Sidebar: React.FC = () => {
                   <span className="underline"></span>
                 </span>
               </div>
-              <div className="flex items-center p-2 rounded-md  cursor-pointer">
-                <img
-                  className="size-6"
-                  src="https://img.icons8.com/parakeet/48/chat-message.png"
-                  alt="chat-message"
-                />
-                <span className="underline-container ml-2 text-xl">
-                  Messages
-                  <span className="underline"></span>
-                </span>
+              <div>
+                <Link to="/chat">
+                  <div className="flex items-center p-2 rounded-md  cursor-pointer">
+                    <img
+                      className="size-6"
+                      src="https://img.icons8.com/parakeet/48/chat-message.png"
+                      alt="chat-message"
+                    />
+                    <span className="underline-container ml-2 text-xl">
+                      Messages
+                      <span className="underline"></span>
+                    </span>
+                  </div>
+                </Link>
               </div>
               <div className="flex items-center p-2 rounded-md  cursor-pointer">
                 <img

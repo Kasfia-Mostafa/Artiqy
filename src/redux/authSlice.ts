@@ -8,12 +8,12 @@ interface User {
   gender?: string;
   profilePicture?: string;
   bio?: string;
-  bookmarks: never[];
+  bookmarks: string[];
   followers: string[];
-  following: [];
-  posts: [];
-  likes?: string[]; 
-  comments?: string[];
+  following: string[];  
+  posts: string[];      
+  likes?: string[];    
+  comments?: string[];  
 }
 
 // Define the initial state interface
@@ -50,6 +50,7 @@ const authSlice = createSlice({
   },
 });
 
+// Export actions
 export const {
   setAuthUser,
   setSuggestedUsers,
@@ -57,4 +58,5 @@ export const {
   setSelectedUser,
 } = authSlice.actions;
 
+// Export the reducer
 export default authSlice.reducer;

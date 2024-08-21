@@ -5,10 +5,9 @@ import useAxiosPublic from "../Hooks/useAxiosPublic";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useDispatch, useSelector } from "react-redux";
-import { Bookmark, Send } from "lucide-react";
+import { Bookmark, MoreHorizontal, Send } from "lucide-react";
 import { setPosts, setSelectedPost } from "@/redux/postSlice";
 import CommentDialog from "./CommentDialog";
 import { RootState } from "@/redux/store";
@@ -42,12 +41,17 @@ interface PostProps {
   post: Post;
 }
 
+interface BookmarkResponse {
+  message: string;
+  success: boolean;
+  type: string;
+}
+
 const Post: React.FC<PostProps> = ({ post }) => {
   const axiosPublic = useAxiosPublic();
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
 
-  // Ensure that posts are typed as Post[]
   const posts: Post[] = useSelector((state: RootState) => state.post.posts);
 
   const [text, setText] = useState<string>("");
@@ -151,14 +155,32 @@ const Post: React.FC<PostProps> = ({ post }) => {
   //* Bookmark a post
   const bookmarkHandler = async () => {
     try {
-      const res = await axiosPublic.get(`/post/${post._id}/bookmark`, {
-        withCredentials: true,
-      });
-      if (res.data.success) {
-        toast.success(res.data.message);
+      console.log("Attempting to bookmark post with ID:", post._id);
+
+      const response = await axiosPublic.post<BookmarkResponse>(
+        `/posts/${post._id}/bookmark`,
+        {},
+        { withCredentials: true }
+      );
+
+      console.log("Bookmark response:", response.data);
+
+      if (response.status === 200 && response.data.success) {
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message || "Failed to bookmark the post.");
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.error("Error bookmarking post:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+        const message =
+          error.response.data.message || "An unexpected error occurred.";
+        toast.error(message);
+      } else {
+        toast.error("An error occurred while connecting to the server.");
+      }
     }
   };
 
@@ -238,7 +260,6 @@ const Post: React.FC<PostProps> = ({ post }) => {
               onClick={likeOrDislikeHandler}
               className="size-8 cursor-pointer"
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFBUlEQVR4nO2Yy27idhSHXalV1UXVbkdtNYRLriQD2NwDBmPA3OyQkAtU6jxCX6HNVO17TLuZdt6hVaVMOlLb/UTqZorNHRs7mkySKqeyCSSADQaSSRb8pLO1vvP57+NjI8gss8wyyyy3HSmztybRhX2JyR9KmTwrZfKnYnqXldJ7B1J6Z/84uW0b95p8hLbzBPOEJ+gDIZxhm6HMKY+nWT6UOuTx1LfNYGJ1anBhY9d0TBeeS0zh4pgpwDGdBykj1x5Iabl2QUrtgJjcgVZi+1eR2sZHghN0WCDo3wSCAYGggQ/LlQE+lAEeTyvVDKagEUxdNAOJn/lAdG4i+OONL2PHdJ7vgLfh9y7hZfAreDGxrVSLyl2I1NbTJrn9yQA4znzKE8xPQkQG78Bn2uChK3ClAsl2rSeg7os36/5YdGx4iSmcj7IuJtvgYiIHIpWDVnxLKSG2+UokN5Y61xMJepknmKNR1pvBK/CGXy4KGr441D2x87pbZxPtY5Pne6ynta3L4CLVBm/FNtsVzUKLzIpCdCMmkExciDCiDN8DPsR64xK84ZUrBnVPFGoussG744bR9unC817ru+rWqV7rbfA2vEBuKMVHmBOeYE70W6euwceg4YlB3R2FupuEuouEGkY80zFt8hfDrec0rQvkJXxELpXjomZ9PaFpXYF3kVB3RqDmJKCKERcNDLcOaSD/RPUhHWo922O99yHtt651XKiu9XqfdQUeI6CGhttlx7/RbiC9+8edWfeoW+/CO0JQtYegagseajYgpnZLw61v6rMemtC6S7Yug/dZV+BxqNpwqKwFWe0GkjunWqNR3TpzQ9bJ3uPSb12BD0L1UQAqa4FTzQZaiVxZl/WIlvX0GNajQ61XHdfBO/DrUF71c9p3IJE7nNg6rmHdfyPWobK6DpVVP5St/gPtOxDf+mHghXQT1r06rDu0rSvwVj9UVnxQWvZ+p90AlfX0WtczGkdZH3whqVvHlYdUzboMX17xQXnZC6Vlj0uzAaUJMvuntvXJ1gBt66EB6wp4n/XyileBLy+5/0JGRSCye/qtqy9fU1u3ytZ9XevlJY9S3IIrN7IBQJD3eIJ+oWv5Wtdh3Tm+9XIHvAO/6JbhX8psiN6vpWY4c6ZqfZo1YALrJRl+3nnOLTgxXfDdJkLp76ddvrRH43Xrfk3rpQW5XFCyYPtjwStHCcff5/Hk7+NZjwy3rjYarX3WF9vWFfB5J3AW7AWg6AfIJKkTqc+a64nSVMtXv3WV0Vi+hL8Cv4Q3Y2x1EX2ATBP574D8XTrp8jWJ9ZLFCawJbRUtzrH/dqg34aHwhid+Mu0aoMu6BQPOjJ5wFnsQucnU3CRdc0XPp1kDeq27B6xzZgxYs+M/bg7bulH4bhNOslBzRs4mXQOuj8ZB6xiwRvSMNdryyG2mioZSNUf4zcTWFwatc2YUOKPjLWt0ZG8VvtuEPRys2PDWxNYtV9Y5EwrsnEMqGu2RdwLfbWI14KisBYrDl68h1k0ocCYHcHOOf4sPH93MtBm7CTTwoGL1vxy2Bgxal8GVIwPsnP3vogn7ArnLHJmpD0vLvqeaa4BiHeu1rsDbnr3+3PMRcl9SWfR8VV50vxlp3WB/yxpsX+veLN9limavnZt3HmlaN9hfFR+u2ZH7nNqC72PWgv7Yd9Zl+F/+MaIDv93vbTgj+lieMKzB9rposD2+a55ZZpllFuRW8j+fN/ZtJnG/2QAAAABJRU5ErkJggg=="
-              //  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADkklEQVR4nO2YyVIaURiFWRsVEBkUFIxDTEyceIlYea5g1AjiFE2cEsVonGKMU6Ju8wgaQ4vSAk4geYI/9Xc3cAWae+1QXVLFX3U2vfrOqXPPojWa4hWveMUrXvGIcx78feU8iJ87D+LQuY+6hY69W+j4eQvtP1AxaNuNQdtODFp3otC6HYXWrSi8QG3ewPPvolo2bqDl2zU8Q61fw9OvV4Ka166gefUKnqxcCmpavoSmpUtoXLqAxi8X0LCIikD9QgTqP0fgMWo+DA5fmLfPhbs0tOvcj/NOATwOnRK4CB+D9l0CHsG3CfBNAnyDBL++C75KgC8T4BK8AL6QAq9D+cLgmAuDfTYUZDEgglNSF8C3ovLg6wT4GoKnp35BTR3B6+YQPgSO2RDYP4WAboCWupK6yKW+mANcSl0Al+BrP57TDdDrcp/UldfFQaSegK+dYTDAVBe51NfkHiljXXzy4DWoaQYDso9Uti73eaSRzNR98nVBJcBt0zzYpni6AeV1EVNvWiHAl1J1aVggUp8Pyz5Se0bqIjjKOsliQIVNz6jLrEzqBLh1IgjVE0G6AbU2HeHtMuDJ1CcJ+A+iqAbyvunzEcV1sUqpI3jVe9QZ3YCam16b5ZEK4JOZ4JbxM7CMMRhQc9NrKHVB8KrxFLz53SmDARU33UapSxJ87FSAN40yGFBz061S6klwMvWxVOrmURHeNBKgG5Dd9Cx1+d9Nt96pSzCjLonUTSOnYBwJgHGYwYCam16dtS5nKfDRFHglaojBgKJHylAX1kdqJlMfluCHAlA5eAKGwRMGAypuuoVSFwF8KCCAG7wnUOFlMJD3TVdQF2Na6gL8AIqjG1Bz082yqWeC6z0c6N0MBtTcdBOlLklwDwc6Nwe6fj/dgJqbbqTUJZG6zu0X4LVvWQyouOmV6XXxpoNzSXBUed8fugHZTZ/J/6Yb0sArPAR8fyp1bZ8IX97LYEDNTTdQ6pJIHcHLUD0MBhRtOnNd6I9U258dvPTNsSCqATU3XU+pC4KX9Yjgpd3H8KibxcD0OZ/XTc9ZFy5nXRKpI/gj128ocR3Rfy1aZ/gu21SQV2PTtcm65EjdJcG/PgqWuI5eavJ1LJteMcAdGocDFs1DPBNl0/UPGR4v16brPf5DY+8DhseTe6QFAY+X7ZHqCgUeL30aCwoej9x0nbvA4PESm64tRHg8vZvb07r9v0q9x0bhQ/E0iu4flGDypKGyTFAAAAAASUVORK5CYII="
             ></img>
           ) : (
             <img

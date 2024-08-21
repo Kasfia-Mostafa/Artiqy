@@ -1,9 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import authSlice from "./authSlice.js";
-import postSlice from "./postSlice.js";
-// import socketSlice from "./socketSlice.js"
-// import chatSlice from "./chatSlice.js";
-// import rtnSlice from "./rtnSlice.js";
+import authSlice from "./authSlice";
+import postSlice from "./postSlice";
+import socketSlice from "./socketSlice";
+import chatSlice from "./chatSlice";
+import rtnSlice from "./rtnSlice";
 
 import {
   persistReducer,
@@ -16,27 +16,33 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
+// Configuration for Redux Persist
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
 };
 
+// Combine reducers
 const rootReducer = combineReducers({
   auth: authSlice,
   post: postSlice,
-  // socketio:socketSlice,
-  // chat:chatSlice,
-  // realTimeNotification:rtnSlice
+  socketio: socketSlice,
+  chat: chatSlice,
+  realTimeNotification: rtnSlice,
 });
 
+// Persisted reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+// Create the Redux store
 const store = configureStore({
   reducer: persistedReducer,
+  devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
+        // Ignore specific actions to bypass serialization checks
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),

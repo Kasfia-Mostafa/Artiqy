@@ -1,16 +1,28 @@
-import { createSlice } from "@reduxjs/toolkit";
+// socketSlice.ts
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+// Define the interface for socket state
+interface SocketState {
+  isConnected: boolean;
+}
+
+// Define the initial state
+const initialState: SocketState = {
+  isConnected: false, 
+};
+
+// Create the socket slice
 const socketSlice = createSlice({
-    name:"socketio",
-    initialState:{
-        socket:null
+  name: "socketio",
+  initialState,
+  reducers: {
+    // Action to set the connection status
+    setConnectionStatus: (state, action: PayloadAction<boolean>) => {
+      state.isConnected = action.payload;
     },
-    reducers:{
-        // actions
-        setSocket:(state,action) => {
-            state.socket = action.payload;
-        }
-    }
+  },
 });
-export const {setSocket} = socketSlice.actions;
+
+// Export the action and reducer
+export const { setConnectionStatus } = socketSlice.actions;
 export default socketSlice.reducer;
