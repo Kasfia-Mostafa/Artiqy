@@ -179,6 +179,18 @@ const Sidebar: React.FC = () => {
                   </div>
                 </Link>
               </div>
+
+              {/* Notification */}
+              <div className="flex items-center p-2 rounded-md  cursor-pointer">
+                <img
+                  className="size-6"
+                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAACdUlEQVR4nO2U204TURSG+xDGBA94IIVC6QEqVpS00ACTVCOgcG18A95Ar7nwCeAtrPF0gQlIqKWNtYHSQjCAYmqhBYqKpf5mdZhO98yedldK4gUr+S9mLta31r/XWibTWfxvgezANLb7gIQdWLLqtWwDko65+kNTHhSV7gU+31CBVEi0BQg2yqoXHOVQRd+9wLceIOkEQtdUaL3g0EJ3JeDXfeDoAZAfAb7eJojcdcwChK6eHI4D/ysc+IH8MPBnFMAYqx93ZdvjNtX2OFnvkIuh77Wu6dqg+yPnubByZftVJ3jDRlp0AHHXOXHwnt+Dn/eMoVQUvbPy3isdfPCcBYi7e8TBucHHSHuMwYdD7LCR5bpu7cCLC8Ci61ENVktPiwl/D/PB+xILTnmB9Zss+EMbEGgAYp1ParBamiomzPj4YDok2hWjf6Uho24vyuCPjklxcHYwUEpYeMhCaZW0UEVbd2Rw2CpDSWHbc3Hw7kCwlCzn16+REZjeOuEEXl5SwaH2eXFwpn+FSWi0RjqwF1h1q1DSfGtSHLzjSzEJaYq1a6QFks2RJvlqLRwPFmm2OSUO3u7LsYl9xmv0pRtY4NxrBf6uKScOTvfmdV3RUClrRMB1N3ubeSL42yt5cTDPzj0J2PEBa67KMB3cciQGxei4bm/pkNBQ0a5udhvfZp3agWAr8KlzXAA8ltEBeceiWgExO/CmUX7nGXNGrFsjoFABx12Wr1SgoXLXOBzaEgLyCti4xXap1UyVris6smTd4A5QpAWIOpb/OXG1wGZXM8LXCwxw1gy8vlxAwtlmOs3AascEIhbgvVm1Mep8dqrQszCdIP4Cj6MOrCq840oAAAAASUVORK5CYII="
+                />
+                <span className="underline-container ml-2 text-xl">
+                  Notifications
+                  <span className="underline"></span>
+                </span>
+              </div>
               <div className="flex items-center p-2 rounded-md  cursor-pointer">
                 <img
                   className="size-6"
@@ -189,15 +201,20 @@ const Sidebar: React.FC = () => {
                   <span className="underline"></span>
                 </span>
               </div>
-              <div className="flex items-center p-2 rounded-md  cursor-pointer">
-                <img
-                  className="size-6"
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB0UlEQVR4nO2WzUoDMRSFB0EfJRFBN24EdW91oViFrjutPkKX3Sg41p110SY7XRUhaZ0BsS+gT1ChtouqD1A6nY2LyB20Ypn+TDtk+pMPDgwhZO4hyc3RNIVCMXvETXtPt5yPhOWIbumm85607IjM+b6BRbwW78hsN2TO903fxX8kc75vlAFL7YCY7yOkT3sXSlp2pOdPzHZDN+0dmfMVCtnEVRZyVBbS5vohSygDzuzuQGGlsJQ6qwsj9iKut8sit/rgCr5hLHVeFyclezKzEMUsSjCvUcxFP91sPH6R5eLhyAaCzjan981divjVoMJplwjimbSWXtDCZpTi6Z+McIvHLNpdVOuz7YoOOU4ROwileLiwFPO3sQ1gVoe1pGch6DZeBQ4r+s9E8Vh6FzJiz4EZIIjdSX8HsptPnhfT/xHiYOBVuoH8mhmYAYp4a6oNEMya0g1kt8rB7QBmFekGINsE14XYrfQuBMEsKAN5zI+kZ6FkyXaD2bhHiGBe8/WQBQmkynEN5FFxP5TiOyYQz3hfTD5QBPMLLWwgEhPELkcwYExEnP4FUiVFrDqwcMSqoR+bXuTWc4sQzCDbUMwq8MK6wqwCY9BtYE7YdSoUCk0O3/pMmk9u/yv9AAAAAElFTkSuQmCC"
-                />
-                <span className="underline-container ml-2 text-xl">
-                  Trending
-                  <span className="underline"></span>
-                </span>
+
+              <div>
+                <Link to="/trends">
+                  <div className="flex items-center p-2 rounded-md  cursor-pointer">
+                    <img
+                      className="size-6"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB0UlEQVR4nO2WzUoDMRSFB0EfJRFBN24EdW91oViFrjutPkKX3Sg41p110SY7XRUhaZ0BsS+gT1ChtouqD1A6nY2LyB20Ypn+TDtk+pMPDgwhZO4hyc3RNIVCMXvETXtPt5yPhOWIbumm85607IjM+b6BRbwW78hsN2TO903fxX8kc75vlAFL7YCY7yOkT3sXSlp2pOdPzHZDN+0dmfMVCtnEVRZyVBbS5vohSygDzuzuQGGlsJQ6qwsj9iKut8sit/rgCr5hLHVeFyclezKzEMUsSjCvUcxFP91sPH6R5eLhyAaCzjan981divjVoMJplwjimbSWXtDCZpTi6Z+McIvHLNpdVOuz7YoOOU4ROwileLiwFPO3sQ1gVoe1pGch6DZeBQ4r+s9E8Vh6FzJiz4EZIIjdSX8HsptPnhfT/xHiYOBVuoH8mhmYAYp4a6oNEMya0g1kt8rB7QBmFekGINsE14XYrfQuBMEsKAN5zI+kZ6FkyXaD2bhHiGBe8/WQBQmkynEN5FFxP5TiOyYQz3hfTD5QBPMLLWwgEhPELkcwYExEnP4FUiVFrDqwcMSqoR+bXuTWc4sQzCDbUMwq8MK6wqwCY9BtYE7YdSoUCk0O3/pMmk9u/yv9AAAAAElFTkSuQmCC"
+                    />
+                    <span className="underline-container ml-2 text-xl">
+                      Trending
+                      <span className="underline"></span>
+                    </span>
+                  </div>
+                </Link>
               </div>
 
               {/* Suggations */}

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { setSuggestedUsers } from "@/redux/authSlice";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -9,28 +7,25 @@ const useGetSuggestedUsers = () => {
   const dispatch = useDispatch();
   const axiosPublic = useAxiosPublic();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [suggestedUsers, setSuggestedUsersState] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchSuggestedUsers = async () => {
       setLoading(true);
-      setError(null);
       try {
         const res = await axiosPublic.get("/user/suggested", {
           withCredentials: true,
         });
-        // console.log("Suggested Users Response:", res.data);
+
         if (res.data.success) {
-          dispatch(setSuggestedUsers(res.data.users));
-          setSuggestedUsersState(res.data.users);
-          // console.log("Suggested Users State Updated:", res.data.users);
-        } else {
-          setError("Failed to fetch suggested users.");
+          // Sort users by createdAt in descending order (most recent first)
+          const sortedUsers = res.data.users.sort(
+            (a: { createdAt: string }, b: { createdAt: string }) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+          dispatch(setSuggestedUsers(sortedUsers));
         }
       } catch (error) {
-        // console.error("Error fetching suggested users:", error);
-        setError("An error occurred while fetching suggested users.");
+        console.error("Error fetching suggested users:", error);
       } finally {
         setLoading(false);
       }
@@ -39,7 +34,7 @@ const useGetSuggestedUsers = () => {
     fetchSuggestedUsers();
   }, [dispatch, axiosPublic]);
 
-  return { loading, error, suggestedUsers };
+  return { loading };
 };
 
 export default useGetSuggestedUsers;

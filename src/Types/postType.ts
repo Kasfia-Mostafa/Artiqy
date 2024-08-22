@@ -27,6 +27,7 @@ export interface UserProfile {
   followers: string[];
   following: string[];
   bio?: string;
+  createdAt?:string
 }
 export interface Post {
   _id: string;
@@ -44,11 +45,11 @@ export interface SelectedUser {
   username: string;
 }
 
+// Use the existing Message interface from chatSlice
 export interface Message {
-  _id: string;          // Unique identifier for the message
-  senderId: string;     // ID of the user who sent the message
-  receiverId: string;   // ID of the user who received the message
-  message: string;      // The content of the message
-  __v?: number;         // Optional version key (usually for versioning in MongoDB)
+  _id: string;
+  senderId: string;
+  receiverId: string;
+  message: string;
 }
 

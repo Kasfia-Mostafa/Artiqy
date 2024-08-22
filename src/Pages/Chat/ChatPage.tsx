@@ -22,6 +22,8 @@ const ChatPage = () => {
   const axiosPublic = useAxiosPublic();
 
   const sendMessageHandler = async (receiverId: string) => {
+    if (!textMessage.trim()) return; // Prevent sending empty messages
+
     try {
       const res = await axiosPublic.post(
         `/message/send/${receiverId}`,
@@ -33,15 +35,15 @@ const ChatPage = () => {
           withCredentials: true,
         }
       );
+
       if (res.data.success) {
         dispatch(setMessages([...messages, res.data.newMessage]));
         setTextMessage("");
-        // Optionally show a success message
       } else {
         console.error("Failed to send message:", res.data.message);
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error sending message:", error);
     }
   };
 
@@ -71,9 +73,9 @@ const ChatPage = () => {
         <div className="overflow-y-auto h-[80vh]">
           {suggestedUsers.map((suggestedUser) => {
             const isOnline = onlineUsers.includes(suggestedUser?._id);
-            console.log(`User ${suggestedUser?.username} is online:`, isOnline);
             return (
               <div
+                key={suggestedUser?._id} 
                 onClick={() => dispatch(setSelectedUser(suggestedUser))}
                 className="flex gap-3 items-center p-3 hover:bg-feed cursor-pointer"
               >
@@ -129,8 +131,10 @@ const ChatPage = () => {
               placeholder="Messages..."
             />
             <Button
-            className="bg-gradient-to-tl from-logo to-feed border border-sky-900 text-sky-900 text-base"
-            onClick={() => sendMessageHandler(selectedUser?._id)}>
+              className="bg-gradient-to-br from-logo to-feed shadow text-sky-900 text-base"
+              onClick={() => sendMessageHandler(selectedUser?._id)}
+              disabled={!textMessage.trim()}
+            >
               Send
             </Button>
           </div>

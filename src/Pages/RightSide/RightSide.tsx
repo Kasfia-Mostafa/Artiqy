@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RootState } from "@/redux/store";
 import SuggestedUsers from "./SuggestedUsers";
+import TrendCard from "./TrendCard";
 
 const RightSide: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
 
   return (
-    <div className="flex justify-center w-full my-10 text-sky-900">
+    <div className="grid justify-center w-full my-10 text-sky-900">
     <div className="flex flex-col items-center">
       <div className="flex items-center gap-2">
         <Link to={`/profile/${user?._id}`}>
@@ -36,6 +37,9 @@ const RightSide: React.FC = () => {
         </div>
       </div>
       <SuggestedUsers />
+    </div>
+    <div>
+      <TrendCard></TrendCard>
     </div>
   </div>
   

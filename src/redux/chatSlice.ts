@@ -2,11 +2,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define the structure of a single message
 interface Message {
-  _id: string;          // Unique identifier for the message
-  senderId: string;     // ID of the user who sent the message
-  receiverId: string;   // ID of the user who received the message
-  message: string;      // The content of the message
-  __v?: number;         // Optional version key
+  _id: string;         
+  senderId: string;     
+  receiverId: string;   
+  message: string;    
+  __v?: number;        
 }
 
 // Define the structure of the chat state
@@ -32,16 +32,16 @@ const chatSlice = createSlice({
       state.onlineUsers = action.payload;
     },
     setMessages: (state, action: PayloadAction<Message[]>) => {
-      state.messages = action.payload; // Update messages
-      state.loading = false; // Set loading to false after messages are fetched
-      state.error = null; // Clear any previous errors
+      state.messages = action.payload; 
+      state.loading = false; 
+      state.error = null; 
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload; // Update loading state
+      state.loading = action.payload; 
     },
     setError: (state, action: PayloadAction<string | null>) => {
-      state.error = action.payload; // Update error state
-      state.loading = false; // Set loading to false if there's an error
+      state.error = action.payload; 
+      state.loading = false; 
     },
   },
 });

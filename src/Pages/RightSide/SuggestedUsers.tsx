@@ -8,6 +8,7 @@ interface User {
   username: string;
   bio?: string;
   profilePicture?: string;
+  createdAt: string;
 }
 
 interface SuggestedUsersState {
@@ -26,24 +27,24 @@ const SuggestedUsers: React.FC = () => {
   }
 
   return (
-    <div className="my-10">
+    <div className="my-10 bg-feed2 pt-8 pb-4 px-6 shadow rounded-2xl">
       <div className="flex items-center justify-between text-sm">
-        <h1 className="font-semibold text-base">Look who's joined!</h1>
+        <h1 className="font-semibold text-base mb-2">Look who's joined!</h1>
 
         <Link to="/suggestions">
           <span className="font-medium cursor-pointer">See All</span>
         </Link>
       </div>
-      {suggestedUsers.map((user) => (
+      {suggestedUsers.slice(0, 3).map((user) => (
         <Link to={`/profile/${user._id}`} key={user._id}>
-          <div className="flex items-center justify-between my-5">
+          <div className="flex items-center justify-between mt-2">
             <div className="flex justify-between h-16 w-80 bg-feed2 space-y-2 px-4 py-2 rounded-2xl">
               <div className="flex gap-3">
                 <Avatar>
                   <AvatarImage src={user.profilePicture} alt="user_avatar" />
                   <AvatarFallback>
                     <img
-                      className="size-10"
+                      className="size-18"
                       src="https://img.icons8.com/3d-fluency/94/user-male-circle.png"
                       alt="user-male-circle"
                     />
