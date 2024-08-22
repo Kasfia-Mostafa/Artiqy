@@ -11,6 +11,7 @@ import CreatePost from "../Feed/CreatePost";
 import { setPosts, setSelectedPost } from "@/redux/postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthUser } from "@/redux/authSlice";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -24,10 +25,6 @@ const Sidebar: React.FC = () => {
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
-  };
-
-  const openSidebar = () => {
-    setOpen(true);
   };
 
   //* Logout
@@ -79,7 +76,7 @@ const Sidebar: React.FC = () => {
         <div
           className={`top-0 left-0 h-screen w-64 bg-wall transition-transform transform
           ${isOpen ? "translate-x-0" : "-translate-x-full"} 
-          lg:translate-x-0 lg:static lg:w-72 z-50`}
+          lg:translate-x-0 lg:static lg:w-full z-50`}
         >
           <div className="p-5 text-sky-800">
             <div className="flex justify-between items-center">
@@ -132,11 +129,19 @@ const Sidebar: React.FC = () => {
               <div>
                 <Link to={`/profile/${user?._id}`}>
                   <div className="flex items-center p-2 rounded-md cursor-pointer">
-                    <img
-                      className="size-6"
-                      src="https://img.icons8.com/3d-fluency/94/user-male-circle.png"
-                      alt="user-male-circle"
-                    />
+                    <Avatar className="w-6 h-6">
+                      {user?.profilePicture ? (
+                        <AvatarImage src={user.profilePicture} alt="Profile" />
+                      ) : (
+                        <AvatarFallback>
+                          <img
+                            className="size-6"
+                            src="https://img.icons8.com/3d-fluency/94/user-male-circle.png"
+                            alt="user-male-circle"
+                          />
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
                     <span className="underline-container ml-2 text-xl">
                       Profile
                       <span className="underline"></span>
@@ -147,7 +152,7 @@ const Sidebar: React.FC = () => {
 
               {/* Message */}
               <div
-                onClick={openSidebar}
+                // onClick={openCreatePost}
                 className="flex items-center p-2 rounded-md  cursor-pointer"
               >
                 <img

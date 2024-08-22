@@ -8,17 +8,10 @@ import { RootState } from "@/redux/store";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
-import { User } from "@/Types/postType";
 import imageCompression from "browser-image-compression";
+import { Input } from "@/components/ui/input";
+import axios from "axios";
 
 const EditProfile: React.FC = () => {
   const imageRef = useRef<HTMLInputElement>(null);
@@ -27,11 +20,11 @@ const EditProfile: React.FC = () => {
   const [input, setInput] = useState<{
     profilePhoto: File | null;
     bio: string;
-    gender: string | undefined; 
+    username: string;
   }>({
     profilePhoto: null,
     bio: user?.bio || "",
-    gender: user?.gender || "", // Default to empty string
+    username: user?.username || "",
   });
 
   const navigate = useNavigate();
@@ -65,17 +58,16 @@ const EditProfile: React.FC = () => {
     }
   };
 
-  const selectChangeHandler = (value: string) => {
-    setInput({ ...input, gender: value });
-  };
-
   const editProfileHandler = async () => {
+    console.log(input);
     const formData = new FormData();
     formData.append("bio", input.bio);
-    formData.append("gender", input.gender || ""); // Ensure a default value
+    formData.append("username", input.username);
+
     if (input.profilePhoto) {
       formData.append("profilePhoto", input.profilePhoto);
     }
+
     try {
       setLoading(true);
       const res = await axiosPublic.post("/user/profile/edit", formData, {
@@ -84,33 +76,26 @@ const EditProfile: React.FC = () => {
         },
         withCredentials: true,
       });
+
       if (res.data.success) {
-        if (!user) {
-          toast.error("User not found.");
-          return;
-        }
-  
-        const updatedUserData: User = {
+        const updatedUserData = {
           ...user!,
+          username: res.data.user?.username || user!.username,
           bio: res.data.user?.bio || user?.bio,
           profilePicture: res.data.user?.profilePicture || user?.profilePicture,
-          gender: res.data.user?.gender || user?.gender,
-          email: user!.email,
-          followers: user!.followers,
-          following: user!.following,
-          posts: user!.posts,
-          bookmarks: user!.bookmarks || [], 
         };
-        
+
         dispatch(setAuthUser(updatedUserData));
-        navigate(`/profile/${user._id}`);
+        navigate(`/profile/${user?._id}`);
         toast.success(res.data.message);
       }
-    } catch (error: any) {
-      console.log(error);
-      toast.error(error.response?.data?.message || "Error updating profile.");
-    } finally {
-      setLoading(false);
+    } catch (error: unknown) {
+      // console.log(error);
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || "An error occurred.");
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
     }
   };
 
@@ -137,7 +122,7 @@ const EditProfile: React.FC = () => {
               </span>
             </div>
           </div>
-          <input
+          <Input
             ref={imageRef}
             onChange={fileChangeHandler}
             type="file"
@@ -157,6 +142,16 @@ const EditProfile: React.FC = () => {
           </Button>
         </div>
         <div>
+          <h1 className="font-bold text-xl mb-2">Username</h1>
+          <Input
+            value={input.username}
+            onChange={(e) => setInput({ ...input, username: e.target.value })}
+            name="username"
+            placeholder="Enter username"
+            className="focus-visible:ring-transparent bg-slate-50"
+          />
+        </div>
+        <div>
           <h1 className="font-bold text-xl mb-2">Bio</h1>
           <Textarea
             value={input.bio}
@@ -165,24 +160,6 @@ const EditProfile: React.FC = () => {
             placeholder="Write bio here"
             className="focus-visible:ring-transparent bg-slate-50"
           />
-        </div>
-        <div>
-          <h1 className="font-bold mb-2">Gender</h1>
-          <Select
-            value={input.gender}
-            onValueChange={selectChangeHandler}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select gender" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="male">Male</SelectItem>
-                <SelectItem value="female">Female</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
         </div>
         <div className="flex justify-end">
           {loading ? (

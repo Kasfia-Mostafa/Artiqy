@@ -52,24 +52,36 @@ const ChatPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-feed2">
       <section className="w-full md:w-1/4 my-8">
-        <h1 className="font-bold mb-4 px-3 text-xl">{user?.username}</h1>
+        <div className="flex items-center ml-4 mb-2">
+          <Avatar className="w-14 h-14">
+            <AvatarImage src={user?.profilePicture} />
+            <AvatarFallback>
+              <img
+                className="size-14"
+                src="https://img.icons8.com/3d-fluency/94/user-male-circle.png"
+                alt="user-male-circle"
+              />
+            </AvatarFallback>
+          </Avatar>
+          <h1 className="font-bold px-3 text-xl flex">{user?.username}</h1>
+        </div>
         <hr className="mb-4 border-gray-300" />
         <div className="overflow-y-auto h-[80vh]">
           {suggestedUsers.map((suggestedUser) => {
             const isOnline = onlineUsers.includes(suggestedUser?._id);
+            console.log(`User ${suggestedUser?.username} is online:`, isOnline);
             return (
               <div
-                key={suggestedUser?._id} // Added key
                 onClick={() => dispatch(setSelectedUser(suggestedUser))}
-                className="flex gap-3 items-center p-3 hover:bg-gray-50 cursor-pointer"
+                className="flex gap-3 items-center p-3 hover:bg-feed cursor-pointer"
               >
                 <Avatar className="w-14 h-14">
                   <AvatarImage src={suggestedUser?.profilePicture} />
                   <AvatarFallback>
                     <img
-                      className="size-14"
+                      className="size-18"
                       src="https://img.icons8.com/3d-fluency/94/user-male-circle.png"
                       alt="user-male-circle"
                     />
@@ -80,7 +92,7 @@ const ChatPage = () => {
                   <span
                     className={`text-xs font-bold ${
                       isOnline ? "text-green-600" : "text-red-600"
-                    } `}
+                    }`}
                   >
                     {isOnline ? "online" : "offline"}
                   </span>
@@ -92,7 +104,7 @@ const ChatPage = () => {
       </section>
       {selectedUser ? (
         <section className="flex-1 border-l border-l-gray-300 flex flex-col h-full">
-          <div className="flex gap-3 items-center px-3 py-2 border-b border-gray-300 sticky top-0 bg-white z-10">
+          <div className="flex gap-3 items-center px-3 py-2 border-b border-gray-300 sticky top-0 bg-wall z-10">
             <Avatar>
               <AvatarImage src={selectedUser?.profilePicture} alt="profile" />
               <AvatarFallback>
@@ -113,10 +125,12 @@ const ChatPage = () => {
               value={textMessage}
               onChange={(e) => setTextMessage(e.target.value)}
               type="text"
-              className="flex-1 mr-2 focus-visible:ring-transparent"
+              className="flex-1 mr-2 focus-visible:ring-transparent bg-slate-50"
               placeholder="Messages..."
             />
-            <Button onClick={() => sendMessageHandler(selectedUser?._id)}>
+            <Button
+            className="bg-gradient-to-tl from-logo to-feed border border-sky-900 text-sky-900 text-base"
+            onClick={() => sendMessageHandler(selectedUser?._id)}>
               Send
             </Button>
           </div>

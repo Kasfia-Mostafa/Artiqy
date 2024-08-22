@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { setSuggestedUsers } from "@/redux/authSlice";
 import { useEffect, useState } from "react";
@@ -9,7 +10,7 @@ const useGetSuggestedUsers = () => {
   const axiosPublic = useAxiosPublic();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [suggestedUsers, setSuggestedUsersState] = useState<any[]>([]); 
+  const [suggestedUsers, setSuggestedUsersState] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchSuggestedUsers = async () => {
@@ -19,24 +20,26 @@ const useGetSuggestedUsers = () => {
         const res = await axiosPublic.get("/user/suggested", {
           withCredentials: true,
         });
+        // console.log("Suggested Users Response:", res.data);
         if (res.data.success) {
           dispatch(setSuggestedUsers(res.data.users));
-          setSuggestedUsersState(res.data.users); 
+          setSuggestedUsersState(res.data.users);
+          // console.log("Suggested Users State Updated:", res.data.users);
         } else {
           setError("Failed to fetch suggested users.");
         }
       } catch (error) {
-        console.error("Error fetching suggested users:", error);
+        // console.error("Error fetching suggested users:", error);
         setError("An error occurred while fetching suggested users.");
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
     fetchSuggestedUsers();
   }, [dispatch, axiosPublic]);
 
-  return { loading, error, suggestedUsers }; 
+  return { loading, error, suggestedUsers };
 };
 
 export default useGetSuggestedUsers;

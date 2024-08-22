@@ -20,6 +20,7 @@ export interface PostProps {
 export interface UserProfile {
   _id: string;
   username: string;
+  email: string;
   profilePicture?: string;
   posts: Post[];
   bookmarks: Post[];
@@ -27,7 +28,6 @@ export interface UserProfile {
   following: string[];
   bio?: string;
 }
-
 export interface Post {
   _id: string;
   caption: string;
@@ -37,20 +37,6 @@ export interface Post {
   comments?: string[];
   createdAt?: Date;
 }
-
-export interface User {
-  _id: string;
-  username: string;
-  email: string;
-  profilePicture?: string;
-  followers: string[]; 
-  following: string[]; 
-  bio?: string;
-  posts?: Post[]; 
-  bookmarks?: Post[]; 
-  gender?: string;
-}
-
 
 export interface SelectedUser {
   _id: string;

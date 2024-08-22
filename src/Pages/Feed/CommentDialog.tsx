@@ -26,7 +26,6 @@ interface Comment {
   createdAt: Date;
   updatedAt: Date;
 }
-
 // Interface for the selected post
 interface SelectedPost {
   _id: Types.ObjectId;
@@ -38,7 +37,6 @@ interface SelectedPost {
   };
   comments: Comment[];
 }
-
 // Props for the CommentDialog component
 interface CommentDialogProps {
   open: boolean;
@@ -161,6 +159,7 @@ const CommentDialog: React.FC<CommentDialogProps> = ({ open, setOpen }) => {
               <div className="p-4">
                 <div className="flex items-center gap-2">
                   <Input
+                    className="focus-visible:ring-transparent"
                     type="text"
                     value={text}
                     onChange={changeEventHandler}

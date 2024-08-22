@@ -19,14 +19,12 @@ interface Comment {
   text: string;
   author: string;
 }
-
 // Define Author interface
 interface Author {
   _id: string;
   username: string;
   profilePicture: string;
 }
-
 // Define Post interface
 interface Post {
   _id: string;
@@ -36,11 +34,9 @@ interface Post {
   likes: string[];
   comments: Comment[];
 }
-
 interface PostProps {
   post: Post;
 }
-
 interface BookmarkResponse {
   message: string;
   success: boolean;
@@ -299,11 +295,12 @@ const Post: React.FC<PostProps> = ({ post }) => {
       <CommentDialog open={open} setOpen={setOpen} />
       <div className="flex items-center justify-between gap-2">
         <Input
+        
           type="text"
           placeholder="Add a comment..."
           value={text}
           onChange={changeEventHandler}
-          className="text-sm w-full"
+          className="text-sm w-full focus-visible:ring-transparent"
         />
         {text && (
           <Button

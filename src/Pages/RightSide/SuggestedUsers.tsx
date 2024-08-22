@@ -19,48 +19,47 @@ const SuggestedUsers: React.FC = () => {
     (store: { auth: SuggestedUsersState }) => store.auth
   );
 
-  if (!suggestedUsers) {
-    return <div>Loading...</div>;
+  // console.log("Redux Suggested Users:", suggestedUsers);
+
+  if (!suggestedUsers || suggestedUsers.length === 0) {
+    return <div>No suggestions available.</div>;
   }
 
   return (
     <div className="my-10">
       <div className="flex items-center justify-between text-sm">
-        <h1 className="font-semibold text-base">Suggested for you</h1>
-        <span className="font-medium cursor-pointer">See All</span>
+        <h1 className="font-semibold text-base">Look who's joined!</h1>
+
+        <Link to="/suggestions">
+          <span className="font-medium cursor-pointer">See All</span>
+        </Link>
       </div>
-      {suggestedUsers.length === 0 ? (
-        <div>No suggestions available.</div>
-      ) : (
-        suggestedUsers.map((user) => (
-          <Link to={`/profile/${user._id}`} key={user._id}> {/* Move key to Link */}
-            <div className="flex items-center justify-between my-5">
-              <div className="flex justify-between h-16 w-80 bg-feed2 border-slate-200 border space-y-2 px-4 py-2 rounded-2xl">
-                <div className="flex gap-3">
-                  <Avatar>
-                    <AvatarImage src={user.profilePicture} alt="post_image" />
-                    <AvatarFallback>
-                      <img
-                        className="size-10"
-                        src="https://img.icons8.com/3d-fluency/94/user-male-circle.png"
-                        alt="user-male-circle"
-                      />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="grid grid-row-1 mt-2">
-                    <span>{user.username}</span>
-                  </div>
+      {suggestedUsers.map((user) => (
+        <Link to={`/profile/${user._id}`} key={user._id}>
+          <div className="flex items-center justify-between my-5">
+            <div className="flex justify-between h-16 w-80 bg-feed2 space-y-2 px-4 py-2 rounded-2xl">
+              <div className="flex gap-3">
+                <Avatar>
+                  <AvatarImage src={user.profilePicture} alt="user_avatar" />
+                  <AvatarFallback>
+                    <img
+                      className="size-10"
+                      src="https://img.icons8.com/3d-fluency/94/user-male-circle.png"
+                      alt="user-male-circle"
+                    />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid grid-row-1 mt-2">
+                  <span>{user.username}</span>
                 </div>
-                <button className="text-md w-20 h-8 bg-teal-600 text-white relative overflow-hidden group z-10 hover:text-white duration-1000 rounded-md hover:cursor-pointer">
-                  <span className="absolute bg-teal-700 size-36 rounded-full group-hover:scale-100 scale-0 -z-10 -left-2 -top-10 group-hover:duration-500 duration-700 origin-center transform transition-all"></span>
-                  <span className="absolute bg-teal-900 size-36 -left-2 -top-10 rounded-full group-hover:scale-100 scale-0 -z-10 group-hover:duration-700 duration-500 origin-center transform transition-all"></span>
-                  Follow
-                </button>
               </div>
+              <button className="text-md w-20 h-8 bg-teal-600 text-white relative overflow-hidden group z-10 hover:text-white duration-1000 rounded-md hover:cursor-pointer">
+                Follow
+              </button>
             </div>
-          </Link>
-        ))
-      )}
+          </div>
+        </Link>
+      ))}
     </div>
   );
 };

@@ -22,10 +22,11 @@ const Suggestions: React.FC = () => {
   }
 
   return (
-    <div className="my-10">
-      <div className="flex items-center justify-between text-sm">
-        <h1 className="font-semibold text-gray-600">Suggested for you</h1>
-        <span className="font-medium cursor-pointer">See All</span>
+    <div className="min-h-screen mx-auto w-2/4 my-20">
+    <div>
+    <div className="flex items-center justify-between text-sm">
+        <h1 className="font-semibold text-xl text-sky-800">Suggested for you</h1>
+       
       </div>
       {suggestedUsers.length === 0 ? (
         <div>No suggestions available.</div>
@@ -37,7 +38,7 @@ const Suggestions: React.FC = () => {
           >
             <div
               key={user._id}
-              className="flex justify-between h-16 w-80 bg-feed2 border-slate-300 border- space-y-2 px-4 py-2 rounded-2xl"
+              className="flex justify-between text-sky-800 h-16 w-full bg-feed2 border-slate-300 border- space-y-2 px-4 py-2 rounded-2xl"
             >
               <div className="flex gap-3">
                 <img
@@ -58,6 +59,7 @@ const Suggestions: React.FC = () => {
           </div>
         ))
       )}
+    </div>
     </div>
   );
 };
