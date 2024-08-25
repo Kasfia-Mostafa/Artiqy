@@ -11,7 +11,7 @@ const Home = () => {
       <div className="col-span-2 flex justify-center items-center">
         <Feed />
       </div>
-      <div className="col-span-1 hidden sm:block bg-wall">
+      <div className="col-span-1 hidden xl:block bg-wall">
         <RightSide/>
       </div>
     </div>

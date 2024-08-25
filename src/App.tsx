@@ -1,44 +1,58 @@
-// App.tsx
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
-import { RouterProvider } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "./redux/store"; 
-import { io, Socket } from "socket.io-client"; 
+import { RouterProvider } from "react-router-dom";
+import { io, Socket } from "socket.io-client";
+import { setSocket } from "@/redux/socketSlice"; 
+import { RootState } from "@/redux/store";
 import { router } from "./Router/router";
-import { setConnectionStatus } from "./redux/socketSlice"; // Import the action
+import { setOnlineUsers } from "./redux/chatSlice";
+import { setLikeNotification } from "./redux/rtnSlice";
 
 function App() {
   const { user } = useSelector((store: RootState) => store.auth);
-  const isConnected = useSelector((store: RootState) => store.socketio.isConnected);
+  const socket = useSelector((store: RootState) => store.socketio.socket);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    let socketio: Socket | null = null; 
-
+    let socketio: Socket | null = null;
+  
     if (user) {
-      if (!isConnected) {
-        // Establish a new socket connection
-        socketio = io("http://localhost:5000", {
-          query: { userId: user._id },
-          transports: ["websocket"],
-        });
-        
-        // Dispatch the connection status
-        dispatch(setConnectionStatus(true));
-
-        socketio.on("disconnect", () => {
-          dispatch(setConnectionStatus(false)); // Update status on disconnect
-        });
-
-        return () => {
-          if (socketio) {
-            socketio.disconnect(); // Clean up socket connection
-            dispatch(setConnectionStatus(false)); // Update status on cleanup
-          }
-        };
-      }
+      socketio = io("http://localhost:5000", {
+        query: { userId: user?._id },
+        transports: ["websocket"],
+      });
+  
+      socketio.on("connect_error", (error) => {
+        console.error("Socket connection error:", error);
+      });
+  
+      socketio.on("getOnlineUsers", (onlineUsers) => {
+        dispatch(setOnlineUsers(onlineUsers));
+      });
+  
+      socketio.on("notification", (notification) => {
+        dispatch(setLikeNotification(notification));
+      });
+  
+      dispatch(setSocket(socketio));
+  
+      return () => {
+        if (socketio) {
+          socketio.off("getOnlineUsers");
+          socketio.off("notification");
+          socketio.close();
+        }
+        dispatch(setSocket(null));
+      };
+    } else if (socket) {
+      socket.off("getOnlineUsers");
+      socket.off("notification");
+      socket.close();
+      dispatch(setSocket(null));
     }
-  }, [user, dispatch, isConnected]);
+  }, [user, dispatch]);
+  
 
   return (
     <>

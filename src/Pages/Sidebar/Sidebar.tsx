@@ -12,6 +12,13 @@ import { setPosts, setSelectedPost } from "@/redux/postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthUser } from "@/redux/authSlice";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { RootState } from "@/redux/store";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -20,8 +27,11 @@ const Sidebar: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.auth.user);
+  const { likeNotification } = useSelector(
+    (store: RootState) => store.realTimeNotification
+  );
 
-  // console.log(user._id); // Example for logging the _id property
+  // console.log(user._id);
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
@@ -72,9 +82,9 @@ const Sidebar: React.FC = () => {
       </div>
 
       {/* Sidebar */}
-      <div className="fixd">
+      <div className="">
         <div
-          className={`top-0 left-0 h-screen w-64 bg-wall transition-transform transform
+          className={`fixed top-0 left-0 rounded-2xl w-80 bg-wall transition-transform transform min-h-screen
           ${isOpen ? "translate-x-0" : "-translate-x-full"} 
           lg:translate-x-0 lg:static lg:w-full z-50`}
         >
@@ -97,8 +107,8 @@ const Sidebar: React.FC = () => {
             </div>
             <hr className="my-6 border-slate-300" />
 
-            {/* Search Input */}
-            <div className="flex items-center bg-[#c8e1e0]  p-2 mt-3 rounded-md">
+              {/* Search Input */}
+              <div className="flex items-center bg-[#c8e1e0]  p-2 mt-3 rounded-md">
               <img
                 className="size-6"
                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADRElEQVR4nO3Y22/TZhzG8dwNJOA6pVxNDWPAoNXKX4KAIiFNO4gAZWyM4xg0qlgHlGaitJQ0TsmBISH2BwxxQdWbFkWTQByEpqQLidODk7ImxGnjOOE7GVaxCyYx/MYmIo/0u/PF87Ff+7XtcDTSSCM1ST+s8mvsDOhIAZ3oFZ1MUKccrFAOVciEKkRDVfwR6AjASse7koESa30lRoZLFP0aSGUY0V/OlQoEjalC6J8JP4dIlWIYAtfAZVtxLywfKNJ3aQF9aBF8JRjW4I0RzyEC5Qj0BmGZpeUv5HH1qzy4WITBBbi0CCYQRGDiKjRZUr5Ppc1bIHNBhX4VBCLkEGyqaflzeVznc2S8z+DnAtQCEQRnTcp7Eiw7m+Nebx768lBDxO83YLlwwI9z9J35C87mwAJEt9DyngxrT2fRe56CFYgwFIQupS6Fke4snJ4DCxFDQsp75lh1SqHoyYCViHAVVciO/cMsO0/OQpcCliNgh2nA8WmkEzNgC6LKsGnAkTTR49NgC6LChGnAYZns0SmwAxGsoJgGfCejHU6DLYgKJdOAb1Noh2SwBaELABx4QvZgCuxAjOgCltD+BNFvkmATYsI0oHMS/9cJsAnhMw3YE6ej80+wAxHQ2GYasO8hK/bEUa1G+Eqog7DCISK74wT2ToLFCL9DVNxxXO44ZasQgwtoQ4t86BCZL2P0uuNgBWKgyBmH6Gy6fm/jtmhOqzmiwHg/fCC0fOutjOvjXx+nXeEou+4vUDPEM6a8RZqFlm8bzbW0j+XSrTdn+Oj6Izb8cpdd9xeFI87nSXkLfCK0/Bop1fLpaG58y1geYzb/Nv0C4QpG2RqdLwlDzDPeqwr+ndJ8WXY5pWR6TTCVbb89H1tCGFdi3Y3HcuvVh+u/itHtjqO+NSKL1vOUn4Sv+aXyTVIKY/6NaB/Ly22jSsvSsZ8lcLpjDP3PzU7tUhj2zAp+VL6u/CuEnDWWk3FP/NeOvTfGjs5JfPsT3DmQRDFexV98T8goR6e4c2yKy9/PsN2jCNph37S8MU4pKRv3hONdTXOjvE1pruczb8TpT8bqtryR1VLq8yYpWa3L8q9D1F35pawOpL5wSsk/6rJ8I428R/kbS3ZQJf3ee90AAAAASUVORK5CYII="
@@ -110,20 +120,23 @@ const Sidebar: React.FC = () => {
               />
             </div>
 
+         
             {/* Menu Items */}
-            <div className="space-y-4 mt-6">
-              <Link to="/">
-                <div className="flex items-center p-2 rounded-md  cursor-pointer">
-                  <img
-                    className="size-6"
-                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADSklEQVR4nO2U708bdRzHL/Ghcf+GD/eERKfoJguFskKvHW2F/uDaQccsCDgiEFY3cIMpGoWkmBH8sbkMdu3d0Q7SLeicIybzsQ/2x9wlL3MmSxrlFu5G+y2GV/J68Pl+v/fO+5vLnSQd8z8m/jMnEnd4XTqKJAzkqMp4pGhNKBrt0lFCKROWiwz4NpFtQyqDyTIB6Sig6FYkpFmpjg0zWGtItQYVw+z49/mUbo18qFnjLxzQyIlpLknSQAX5vE6ic5Pu/exVSSsGXbXPJDQmas/Ys5jyBnJII+7bIPAyIypKWsf/4rm4xnjtvj03vHxaIxRWrWTHPfPcQYzcZ0DRzH8+7HjJGqvds+eGlld0gr0qcf8GfjdGVVKZCmeTGqO16/bcsPIZA1kuWn0+1ez0YlSzUv2alatdi2tWYy6Q0egJl4h1FvG9ioEi/to5sdWAv5Bi0B0pEfOrtB+2SYOP6lo+XSYQKxMJFDlbD1M6l+pavlcn4ldpq5dJneH6lNfNQLhknu/aND+op5H7VvSCwZlDLX/RoKtfJxxQOd0I+3UiQxVOH0r5XJWOvgpyV4n3G2mySvjjXVpfqfwnD2lPPaAnoNMqwswO8vQTTnkqP/srbekdAt0l3hXp4DbB/K7LS3z+O21jG1YsWzDDl1asmEizBTM8VrT65g76JpZ+48z0XZKzNxi9cZX565+xKNKFa8zNLjJ6ZQNl6SlvvbT8l39yalIjlL/OyNI0a8tTbC9P8otQp9j+aoZb+QVGZnSiX+9xct/yy884ceUJPblVehaucXV5kgeFYaxCFoQ6jGV3sTvZ3eb/QFbhtf9cYP05b8zt0T3xLaEv8syvXKa6OgTN4MplqnYnu9viM4L7XsDm+784ubpFZv07vrl9k8c/fgrN4O2bPLY7FQwurD/nTemglC9CMyh55eEUNIOSV3bz0AxKXnk0A82g5JXqJDSDkld2xqAZlLxSyUEzKHllKwtuNYZ4xylPz9LqJVPyip4Bt4rIdKSUBLeKyHRE7QO3ish0ZLMX3Coi05F7QXCriExH7p4Dt4rIdOSOD9wqItORn9rArSIyHfnhPXCriExH1t8Gt4rIdGSthb21Fjiot1p4KiLzmGMk7/wNXrx+K0Y3yIkAAAAASUVORK5CYII="
-                  />
-                  <span className="underline-container ml-2 text-xl">
-                    Home
-                    <span className="underline"></span>
-                  </span>
-                </div>
-              </Link>
+            <div className="space-y-4 mt-6 grid grid-cols-2 md:grid-cols-1 lg:grid-cols-1">
+              <div>
+                <Link to="/">
+                  <div className="flex items-center p-2 rounded-md  cursor-pointer">
+                    <img
+                      className="size-6"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADSklEQVR4nO2U708bdRzHL/Ghcf+GD/eERKfoJguFskKvHW2F/uDaQccsCDgiEFY3cIMpGoWkmBH8sbkMdu3d0Q7SLeicIybzsQ/2x9wlL3MmSxrlFu5G+y2GV/J68Pl+v/fO+5vLnSQd8z8m/jMnEnd4XTqKJAzkqMp4pGhNKBrt0lFCKROWiwz4NpFtQyqDyTIB6Sig6FYkpFmpjg0zWGtItQYVw+z49/mUbo18qFnjLxzQyIlpLknSQAX5vE6ic5Pu/exVSSsGXbXPJDQmas/Ys5jyBnJII+7bIPAyIypKWsf/4rm4xnjtvj03vHxaIxRWrWTHPfPcQYzcZ0DRzH8+7HjJGqvds+eGlld0gr0qcf8GfjdGVVKZCmeTGqO16/bcsPIZA1kuWn0+1ez0YlSzUv2alatdi2tWYy6Q0egJl4h1FvG9ioEi/to5sdWAv5Bi0B0pEfOrtB+2SYOP6lo+XSYQKxMJFDlbD1M6l+pavlcn4ldpq5dJneH6lNfNQLhknu/aND+op5H7VvSCwZlDLX/RoKtfJxxQOd0I+3UiQxVOH0r5XJWOvgpyV4n3G2mySvjjXVpfqfwnD2lPPaAnoNMqwswO8vQTTnkqP/srbekdAt0l3hXp4DbB/K7LS3z+O21jG1YsWzDDl1asmEizBTM8VrT65g76JpZ+48z0XZKzNxi9cZX565+xKNKFa8zNLjJ6ZQNl6SlvvbT8l39yalIjlL/OyNI0a8tTbC9P8otQp9j+aoZb+QVGZnSiX+9xct/yy884ceUJPblVehaucXV5kgeFYaxCFoQ6jGV3sTvZ3eb/QFbhtf9cYP05b8zt0T3xLaEv8syvXKa6OgTN4MplqnYnu9viM4L7XsDm+784ubpFZv07vrl9k8c/fgrN4O2bPLY7FQwurD/nTemglC9CMyh55eEUNIOSV3bz0AxKXnk0A82g5JXqJDSDkld2xqAZlLxSyUEzKHllKwtuNYZ4xylPz9LqJVPyip4Bt4rIdKSUBLeKyHRE7QO3ish0ZLMX3Coi05F7QXCriExH7p4Dt4rIdOSOD9wqItORn9rArSIyHfnhPXCriExH1t8Gt4rIdGSthb21Fjiot1p4KiLzmGMk7/wNXrx+K0Y3yIkAAAAASUVORK5CYII="
+                    />
+                    <span className="underline-container ml-2 text-xl">
+                      Home
+                      <span className="underline"></span>
+                    </span>
+                  </div>
+                </Link>
+              </div>
 
               {/* Profile */}
               <div>
@@ -150,11 +163,8 @@ const Sidebar: React.FC = () => {
                 </Link>
               </div>
 
-              {/* Message */}
-              <div
-                // onClick={openCreatePost}
-                className="flex items-center p-2 rounded-md  cursor-pointer"
-              >
+              {/* Create Post */}
+              <div className="flex items-center p-2 rounded-md  cursor-pointer">
                 <img
                   className="size-6"
                   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACrklEQVR4nO2Yz0/TYBjHe/ZE3zFINCZoRHECowUTz7LWA/MEXtRJ2yVkEQQOih48QLbgH6Am+wckUS+ePIksasJB+RF3oC9RDi0knkx03h/zvl1xM0zaTt+3i32SN1nbpPt83uf7vt0qCC1Qkpo9JaX0N7KiVeSU9vyCmkVCq1T/cOa0rGh7sqLD/kjpG+eHMzEh7DV0yTjjwkspfdk51nH1eC3UnRj6DX4wPXGEnJdSxlFXgsRJaCV4twbV8R7nmvZd+FO1be9eFrG1ImLrB8I2sBidbzcgOTZNs57I3v8aXy2P1jIRGSLlrAet1BBeNK1FVtDoIPjJPMTKO/S8aNqFA+D3yO7UcOZZw3fUwufmIfbxc9110glZ0V/R6Cjal4GLeqLx7GNrJUzwsfIOjZMn+KpAhRn8u83D4acK4BmeFFP4KzOe4JOjU+AJnpWAX/jO0jp4gmchEAQeYTscAkHhURgEmoFHvAWahUc8Bf4GPOIl0LFart/nqz8P6uAn8w782DR9qDW6F3sB04LEzYX9PyK9mTlo/7AVCB7xEDj2olSNxS3ou3GXfu67Pgfx91u+4REPgbMzixTwxKMliK+Z0Dt+z5G4dgfO5RYOzTxXATKjsmqANDIB8XVMz5H4kBi5kUp6nHkuAt2FIoXsnn9Mj4nEyYdLNE5B4BFLgfbNTzCQztEOHH/ykkqQTrgzTxY22Z2Qz/syE+gqPnNgVePXqxDVgJ7ZB3Rhk90pyH0FVgJkkbrgpBMkTn7jgngKkIj0X70NXcWnNE7N3g+xFvhXQ4gEcNQBiCLkpXhHBUWLGPOfbRRto5j/jKP/9kEmMny5izwO0bS/+RF4HToBbC17Fmjb3k2HT8Ae8SxAu2DahRDFJ+8LvrYTpHU81oSIrYrz3T5nPqqoohJaqn4CiniFdVLs//QAAAAASUVORK5CYII="
@@ -164,6 +174,8 @@ const Sidebar: React.FC = () => {
                   <span className="underline"></span>
                 </span>
               </div>
+
+              {/* Message */}
               <div>
                 <Link to="/chat">
                   <div className="flex items-center p-2 rounded-md  cursor-pointer">
@@ -188,9 +200,50 @@ const Sidebar: React.FC = () => {
                 />
                 <span className="underline-container ml-2 text-xl">
                   Notifications
+                  {likeNotification.length > 0 && (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          size="icon"
+                          className="rounded-full h-5 w-5 bg-red-600 hover:bg-red-600 absolute bottom-6 left-6"
+                        >
+                          {likeNotification.length}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <div>
+                          {likeNotification.map((notification) => (
+                            <div
+                              key={notification.userId}
+                              className="flex items-center gap-2 my-2"
+                            >
+                              <Avatar>
+                                <AvatarImage
+                                  src={
+                                    notification.userDetails?.profilePicture ||
+                                    "fallback-image-url"
+                                  } 
+                                />
+                                <AvatarFallback>CN</AvatarFallback>
+                              </Avatar>
+                              <p className="text-sm">
+                                <span className="font-bold">
+                                  {notification.userDetails?.username ||
+                                    "Unknown User"}{" "}
+                                </span>{" "}
+                                liked your post
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  )}
                   <span className="underline"></span>
                 </span>
               </div>
+
+              {/* Bookmarks */}
               <div className="flex items-center p-2 rounded-md  cursor-pointer">
                 <img
                   className="size-6"
@@ -202,6 +255,7 @@ const Sidebar: React.FC = () => {
                 </span>
               </div>
 
+              {/* Trends */}
               <div>
                 <Link to="/trends">
                   <div className="flex items-center p-2 rounded-md  cursor-pointer">
@@ -232,7 +286,8 @@ const Sidebar: React.FC = () => {
                   </div>
                 </Link>
               </div>
-            </div>
+          </div>
+           
             <hr className="my-6 border-slate-300" />
             <div className="flex items-center p-2 rounded-md cursor-pointer">
               <button className="cta" onClick={logoutHandler}>
