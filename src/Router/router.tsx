@@ -7,37 +7,66 @@ import Suggestions from "@/Pages/RightSide/Suggestions";
 import Trends from "@/Pages/RightSide/Trends";
 import Login from "@/Pages/User/Login";
 import SignUp from "@/Pages/User/SignUp";
+import ProtectedRoutes from "@/ProtectedRoute/ProtectedRoute";
 import { createBrowserRouter } from "react-router-dom";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Main></Main>,
+    element: (
+      <ProtectedRoutes>
+        <Main></Main>
+      </ProtectedRoutes>
+    ),
     children: [
       {
         path: "/",
-        element: <Home/>,
+        element: (
+          <ProtectedRoutes>
+            <Home />
+          </ProtectedRoutes>
+        ),
       },
       {
         path: "/profile/:id",
-        element: <Profile/>,
+        element: (
+          <ProtectedRoutes>
+            <Profile />
+          </ProtectedRoutes>
+        ),
       },
       {
         path: "/profile/edit",
-        element: <EditProfile/>,
+        element: (
+          <ProtectedRoutes>
+            <EditProfile />
+          </ProtectedRoutes>
+        ),
       },
       {
         path: "/suggestions",
-        element: <Suggestions/>,
+        element: (
+          <ProtectedRoutes>
+            <Suggestions />
+          </ProtectedRoutes>
+        ),
       },
       {
         path: "/trends",
-        element: <Trends/>,
+        element: (
+          <ProtectedRoutes>
+            <Trends />
+          </ProtectedRoutes>
+        ),
       },
-    {
-      path: "/chat",
-      element: <ChatPage/>,
-    },
+      {
+        path: "/chat",
+        element: (
+          <ProtectedRoutes>
+            <ChatPage />
+          </ProtectedRoutes>
+        ),
+      },
     ],
   },
   {

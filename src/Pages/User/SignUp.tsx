@@ -3,11 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import { ChangeEvent, FormEvent, useContext, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 import cover from "../../assets/img/ny.jpg";
 import { AuthContext } from "@/Authentication/Providers/AuthProvides";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface SignUpInput {
   username: string;
@@ -22,6 +24,7 @@ const SignUp = () => {
   }
   const { createUser } = authContext;
   const axiosPublic = useAxiosPublic();
+  const { user } = useSelector((store: RootState) => store.auth);
   const [input, setInput] = useState<SignUpInput>({
     username: "",
     email: "",
@@ -60,7 +63,11 @@ const SignUp = () => {
     }
   };
 
-  // Google sign up
+   useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, []);
 
   
 

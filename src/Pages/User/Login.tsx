@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import { ChangeEvent, FormEvent, useContext, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAuthUser } from "@/redux/authSlice";
 import cover from "../../assets/img/ny.jpg";
 import { AuthContext } from "@/Authentication/Providers/AuthProvides";
+import { RootState } from "@/redux/store";
 
 interface LoginInput {
   email: string;
@@ -20,7 +21,7 @@ const Login = () => {
   const axiosPublic = useAxiosPublic();
   const dispatch = useDispatch();
   const authContext = useContext(AuthContext);
-
+  const { user } = useSelector((store: RootState) => store.auth);
   if (!authContext) {
     throw new Error("AuthContext is not available");
   }
@@ -38,7 +39,7 @@ const Login = () => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
-  const signUpHandler = async (e: FormEvent) => {
+  const loginHandler = async (e: FormEvent) => {
     e.preventDefault();
     try {
       setLoading(true);
@@ -66,7 +67,11 @@ const Login = () => {
     }
   };
 
-  // google login
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="flex items-center h-screen justify-center">
@@ -75,7 +80,7 @@ const Login = () => {
           <div className="md:w-1/2 px-8 md:px-16">
             <h2 className="font-bold text-3xl text-[#002D74]">Login</h2>
 
-            <form onSubmit={signUpHandler} className="flex flex-col gap-4">
+            <form onSubmit={loginHandler} className="flex flex-col gap-4">
               <Input
                 className="p-2 mt-8 rounded-xl focus-visible:ring-transparent"
                 type="email"
