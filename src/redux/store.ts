@@ -7,6 +7,7 @@ import rtnSlice from "./rtnSlice";
 
 import {
   persistReducer,
+  persistStore,
   FLUSH,
   REHYDRATE,
   PAUSE,
@@ -42,11 +43,13 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore specific actions to bypass serialization checks
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
 });
+
+// Create the persistor
+export const persistor = persistStore(store);
 
 // Infer the `AppDispatch` type from the store itself
 export type AppDispatch = typeof store.dispatch;

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { useDispatch, useSelector } from "react-redux";
-import { Bookmark, MoreHorizontal, Send } from "lucide-react";
+import {  MoreHorizontal, Send } from "lucide-react";
 import { setPosts, setSelectedPost } from "@/redux/postSlice";
 import CommentDialog from "./CommentDialog";
 import { RootState } from "@/redux/store";
@@ -154,7 +154,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
       console.log("Attempting to bookmark post with ID:", post._id);
 
       const response = await axiosPublic.post<BookmarkResponse>(
-        `/posts/${post._id}/bookmark`,
+        `/post/${post._id}/bookmark`,
         {},
         { withCredentials: true }
       );
@@ -168,14 +168,20 @@ const Post: React.FC<PostProps> = ({ post }) => {
       }
     } catch (error: any) {
       console.error("Error bookmarking post:", error);
+
       if (error.response) {
         console.error("Response data:", error.response.data);
         console.error("Response status:", error.response.status);
+        console.error("Response headers:", error.response.headers);
         const message =
           error.response.data.message || "An unexpected error occurred.";
         toast.error(message);
+      } else if (error.request) {
+        console.error("Request made but no response received:", error.request);
+        toast.error("No response received from the server. Please try again.");
       } else {
-        toast.error("An error occurred while connecting to the server.");
+        console.error("Error setting up the request:", error.message);
+        toast.error("Error setting up the request. Please try again.");
       }
     }
   };
@@ -274,10 +280,14 @@ const Post: React.FC<PostProps> = ({ post }) => {
           ></img>
           <Send className="cursor-pointer hover:text-gray-600" />
         </div>
-        <Bookmark
-          onClick={bookmarkHandler}
-          className="cursor-pointer hover:text-gray-600"
-        />
+
+        <div>
+          <img
+            onClick={bookmarkHandler}
+            className="size-8 cursor-pointer"
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABUUlEQVR4nO2SsUvDUBCHT6GDIIjwDg0Uoe+KiLh17ZJRFFycu5mMgsFZ/wVX3Ry7+U6d3FwLDk5OgnaQBNzFtpFAKy5B5fUlEe+DG9/v3Y/7AARB+DFxEG3FQdRPwih1MXF48BzvRZvgiuwDV8snkxJB9OSsgOvlk/FIgTzkAmHJCj34O2kRA1IgB7mALwrZIQr5opAdd95aWsSAK6SAJxewQxTyRCE7RCFPFLJDFPJKVoiR0iIGpEAOcgEUhez4VwoZ1H3G5u6Famyzosc/U8Cgfmekky6uz0/edev1OUY6ZtRv1S6g6JaX9Ebe+yvVWGVFN5UrYJBeWen9I4DZ7zJSgBlG6hil49ILGKQRK31+vdzE32ZdLqwsZqox0rDIAoPP5RXdG9Rt20yDup1lfSkwAFcw6jNW9GJQH/agVZtWbg9atSxznH06rVxBEKD6fABihiIvJkUCyQAAAABJRU5ErkJggg=="
+          ></img>
+        </div>
       </div>
       <span className="font-medium block mb-2">{postLike} likes</span>
 
@@ -295,7 +305,6 @@ const Post: React.FC<PostProps> = ({ post }) => {
       <CommentDialog open={open} setOpen={setOpen} />
       <div className="flex items-center justify-between gap-2">
         <Input
-        
           type="text"
           placeholder="Add a comment..."
           value={text}

@@ -2,6 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { toast } from "sonner";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
 
 interface User {
   _id: string;
@@ -19,12 +21,29 @@ const SuggestedUsers: React.FC = () => {
   const { suggestedUsers } = useSelector(
     (store: { auth: SuggestedUsersState }) => store.auth
   );
-
+  const axiosPublic = useAxiosPublic()
   // console.log("Redux Suggested Users:", suggestedUsers);
 
   if (!suggestedUsers || suggestedUsers.length === 0) {
     return <div>No suggestions available.</div>;
   }
+
+  const handleFollow = async (targetUserId: string) => {
+    try {
+      const res = await axiosPublic.post(
+        `/user/followOrUnfollow/${targetUserId}`,
+        {},
+        { withCredentials: true }
+      );
+      if (res.data.success) {
+        toast.success("Successfully followed the user.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to follow the user.");
+    }
+  };
+  
 
   return (
     <div className="my-10 bg-feed2 pt-8 pb-4 px-6 shadow rounded-2xl">
@@ -54,7 +73,9 @@ const SuggestedUsers: React.FC = () => {
                   <span>{user.username}</span>
                 </div>
               </div>
-              <button className="text-md w-20 h-8 bg-teal-600 text-white relative overflow-hidden group z-10 hover:text-white duration-1000 rounded-md hover:cursor-pointer">
+              <button
+               onClick={() => handleFollow(user._id)}
+              className="text-md w-20 h-8 bg-teal-600 text-white relative overflow-hidden group z-10 hover:text-white duration-1000 rounded-md hover:cursor-pointer">
                 Follow
               </button>
             </div>

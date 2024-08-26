@@ -31,7 +31,7 @@ const Sidebar: React.FC = () => {
     (store: RootState) => store.realTimeNotification
   );
 
-  // console.log(user._id);
+  // console.log(likeNotification);
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
@@ -107,8 +107,8 @@ const Sidebar: React.FC = () => {
             </div>
             <hr className="my-6 border-slate-300" />
 
-              {/* Search Input */}
-              <div className="flex items-center bg-[#c8e1e0]  p-2 mt-3 rounded-md">
+            {/* Search Input */}
+            <div className="flex items-center bg-[#c8e1e0]  p-2 mt-3 rounded-md">
               <img
                 className="size-6"
                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADRElEQVR4nO3Y22/TZhzG8dwNJOA6pVxNDWPAoNXKX4KAIiFNO4gAZWyM4xg0qlgHlGaitJQ0TsmBISH2BwxxQdWbFkWTQByEpqQLidODk7ImxGnjOOE7GVaxCyYx/MYmIo/0u/PF87Ff+7XtcDTSSCM1ST+s8mvsDOhIAZ3oFZ1MUKccrFAOVciEKkRDVfwR6AjASse7koESa30lRoZLFP0aSGUY0V/OlQoEjalC6J8JP4dIlWIYAtfAZVtxLywfKNJ3aQF9aBF8JRjW4I0RzyEC5Qj0BmGZpeUv5HH1qzy4WITBBbi0CCYQRGDiKjRZUr5Ppc1bIHNBhX4VBCLkEGyqaflzeVznc2S8z+DnAtQCEQRnTcp7Eiw7m+Nebx768lBDxO83YLlwwI9z9J35C87mwAJEt9DyngxrT2fRe56CFYgwFIQupS6Fke4snJ4DCxFDQsp75lh1SqHoyYCViHAVVciO/cMsO0/OQpcCliNgh2nA8WmkEzNgC6LKsGnAkTTR49NgC6LChGnAYZns0SmwAxGsoJgGfCejHU6DLYgKJdOAb1Noh2SwBaELABx4QvZgCuxAjOgCltD+BNFvkmATYsI0oHMS/9cJsAnhMw3YE6ej80+wAxHQ2GYasO8hK/bEUa1G+Eqog7DCISK74wT2ToLFCL9DVNxxXO44ZasQgwtoQ4t86BCZL2P0uuNgBWKgyBmH6Gy6fm/jtmhOqzmiwHg/fCC0fOutjOvjXx+nXeEou+4vUDPEM6a8RZqFlm8bzbW0j+XSrTdn+Oj6Izb8cpdd9xeFI87nSXkLfCK0/Bop1fLpaG58y1geYzb/Nv0C4QpG2RqdLwlDzDPeqwr+ndJ8WXY5pWR6TTCVbb89H1tCGFdi3Y3HcuvVh+u/itHtjqO+NSKL1vOUn4Sv+aXyTVIKY/6NaB/Ly22jSsvSsZ8lcLpjDP3PzU7tUhj2zAp+VL6u/CuEnDWWk3FP/NeOvTfGjs5JfPsT3DmQRDFexV98T8goR6e4c2yKy9/PsN2jCNph37S8MU4pKRv3hONdTXOjvE1pruczb8TpT8bqtryR1VLq8yYpWa3L8q9D1F35pawOpL5wSsk/6rJ8I428R/kbS3ZQJf3ee90AAAAASUVORK5CYII="
@@ -120,7 +120,6 @@ const Sidebar: React.FC = () => {
               />
             </div>
 
-         
             {/* Menu Items */}
             <div className="space-y-4 mt-6 grid grid-cols-2 md:grid-cols-1 lg:grid-cols-1">
               <div>
@@ -199,19 +198,18 @@ const Sidebar: React.FC = () => {
                   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAACdUlEQVR4nO2U204TURSG+xDGBA94IIVC6QEqVpS00ACTVCOgcG18A95Ar7nwCeAtrPF0gQlIqKWNtYHSQjCAYmqhBYqKpf5mdZhO98yedldK4gUr+S9mLta31r/XWibTWfxvgezANLb7gIQdWLLqtWwDko65+kNTHhSV7gU+31CBVEi0BQg2yqoXHOVQRd+9wLceIOkEQtdUaL3g0EJ3JeDXfeDoAZAfAb7eJojcdcwChK6eHI4D/ysc+IH8MPBnFMAYqx93ZdvjNtX2OFnvkIuh77Wu6dqg+yPnubByZftVJ3jDRlp0AHHXOXHwnt+Dn/eMoVQUvbPy3isdfPCcBYi7e8TBucHHSHuMwYdD7LCR5bpu7cCLC8Ci61ENVktPiwl/D/PB+xILTnmB9Zss+EMbEGgAYp1ParBamiomzPj4YDok2hWjf6Uho24vyuCPjklxcHYwUEpYeMhCaZW0UEVbd2Rw2CpDSWHbc3Hw7kCwlCzn16+REZjeOuEEXl5SwaH2eXFwpn+FSWi0RjqwF1h1q1DSfGtSHLzjSzEJaYq1a6QFks2RJvlqLRwPFmm2OSUO3u7LsYl9xmv0pRtY4NxrBf6uKScOTvfmdV3RUClrRMB1N3ubeSL42yt5cTDPzj0J2PEBa67KMB3cciQGxei4bm/pkNBQ0a5udhvfZp3agWAr8KlzXAA8ltEBeceiWgExO/CmUX7nGXNGrFsjoFABx12Wr1SgoXLXOBzaEgLyCti4xXap1UyVris6smTd4A5QpAWIOpb/OXG1wGZXM8LXCwxw1gy8vlxAwtlmOs3AascEIhbgvVm1Mep8dqrQszCdIP4Cj6MOrCq840oAAAAASUVORK5CYII="
                 />
                 <span className="underline-container ml-2 text-xl">
-                  Notifications
                   {likeNotification.length > 0 && (
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
                           size="icon"
-                          className="rounded-full h-5 w-5 bg-red-600 hover:bg-red-600 absolute bottom-6 left-6"
+                          className="rounded-full h-6 w-6 bg-red-600 hover:bg-red-700 absolute bottom-6 left-6"
                         >
                           {likeNotification.length}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent>
-                        <div>
+                        <div className="p-2">
                           {likeNotification.map((notification) => (
                             <div
                               key={notification.userId}
@@ -221,16 +219,22 @@ const Sidebar: React.FC = () => {
                                 <AvatarImage
                                   src={
                                     notification.userDetails?.profilePicture ||
-                                    "fallback-image-url"
-                                  } 
+                                    "/path-to-default-image.png"
+                                  }
                                 />
-                                <AvatarFallback>CN</AvatarFallback>
+                                <AvatarFallback>
+                                  <img
+                                    className="size-10"
+                                    src="https://img.icons8.com/3d-fluency/94/user-male-circle.png"
+                                    alt="user-male-circle"
+                                  />
+                                </AvatarFallback>
                               </Avatar>
                               <p className="text-sm">
                                 <span className="font-bold">
                                   {notification.userDetails?.username ||
                                     "Unknown User"}{" "}
-                                </span>{" "}
+                                </span>
                                 liked your post
                               </p>
                             </div>
@@ -239,6 +243,7 @@ const Sidebar: React.FC = () => {
                       </PopoverContent>
                     </Popover>
                   )}
+                  Notifications
                   <span className="underline"></span>
                 </span>
               </div>
@@ -286,8 +291,8 @@ const Sidebar: React.FC = () => {
                   </div>
                 </Link>
               </div>
-          </div>
-           
+            </div>
+
             <hr className="my-6 border-slate-300" />
             <div className="flex items-center p-2 rounded-md cursor-pointer">
               <button className="cta" onClick={logoutHandler}>

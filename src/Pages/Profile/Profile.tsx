@@ -1,4 +1,6 @@
-import { useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Heart, MessageCircle } from "lucide-react";
@@ -7,25 +9,47 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import cover from "../../assets/img/aurora.jpg";
 import { RootState } from "@/redux/store";
-import { Post, User } from "@/Types/postType";
+import { Post } from "@/Types/postType";
 import { Badge } from "@/components/ui/badge";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
+import { toast } from "sonner";
 
-interface UserProfile extends User {
+interface UserProfile {
   posts: Post[];
   bookmarks?: Post[];
   likes?: Post[];
-  comment?:Post[]
+  comments?: Post[];
+}
+
+interface User {
+  _id: string;
+  username: string;
+  bio?: string;
+  profilePicture?: string;
+  createdAt: string;
+  isFollowing: boolean;
+}
+interface SuggestedUsersState {
+  suggestedUsers: User[];
+}
+interface FollowingStatus {
+  [key: string]: boolean;
 }
 
 const Profile = () => {
   const params = useParams();
+  const axiosPublic = useAxiosPublic();
   const userId = params.id || "defaultUserId";
   useGetUserProfile(userId);
+  const { suggestedUsers } = useSelector(
+    (store: { auth: SuggestedUsersState }) => store.auth
+  );
   const [activeTab, setActiveTab] = useState<string>("posts");
-
+  // const [followingStatus, setFollowingStatus] = useState<{
+  //   [key: string]: boolean;
+  // }>({});
   const { userProfile, user } = useSelector((store: RootState) => store.auth);
   const isLoggedInUserProfile = user?._id === userProfile?._id;
-  const isFollowing = false;
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -33,10 +57,44 @@ const Profile = () => {
 
   const displayedPosts =
     activeTab === "posts"
-      ? (userProfile as UserProfile)?.posts
-      : (userProfile as UserProfile)?.bookmarks;
+      ? (userProfile as unknown as UserProfile)?.posts
+      : (userProfile as unknown as UserProfile)?.bookmarks;
 
-// console.log(displayedPosts)
+  // follow or unfollow
+  const [followingStatus, setFollowingStatus] = useState<FollowingStatus>({});
+
+  useEffect(() => {
+    const initialFollowingStatus: { [key: string]: boolean } = {};
+    suggestedUsers.forEach((user) => {
+      initialFollowingStatus[user._id] = user.isFollowing || false; 
+    });
+    console.log("Initial Following Status:", initialFollowingStatus); 
+    setFollowingStatus(initialFollowingStatus);
+  }, [suggestedUsers]);
+
+  const followOrUnfollowHandler = async (targetUserId: string) => {
+    try {
+      const res = await axiosPublic.post(
+        `/user/followOrUnfollow/${targetUserId}`,
+        {},
+        { withCredentials: true }
+      );
+
+      if (res.data.success) {
+        // Update the following status
+        setFollowingStatus((prevStatus) => ({
+          ...prevStatus,
+          [targetUserId]: !prevStatus[targetUserId],
+        }));
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.error("Error in follow/unfollow handler:", error);
+      toast.error("Failed to follow/unfollow the user.");
+    }
+  };
+
+  // console.log(displayedPosts)
 
   const svgs = [
     {
@@ -207,7 +265,6 @@ const Profile = () => {
     },
   ];
 
- 
   return (
     <div>
       <div className="max-w-6xl bg-gradient-to-r from-teal-100 to-sky-100 mx-auto mt-2 mb-4 pb-4 flex flex-col items-center justify-center space-y-4 bg-white rounded-2xl text-black ">
@@ -300,34 +357,58 @@ const Profile = () => {
             <div className="flex flex-col gap-5">
               <div className="flex items-center gap-2">
                 {isLoggedInUserProfile ? (
-                  <>
-                    <Link to="/profile/edit">
-                      <Button className="group relative z-10 h-8 w-28 overflow-hidden rounded-md bg-sky-700 text-sm text-white">
-                        <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-white transition-transform duration-700 group-hover:scale-x-100 group-hover:duration-300"></span>
-                        <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-sky-700 transition-transform duration-500 group-hover:scale-x-100 group-hover:duration-700"></span>
-                        <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-sky-900 transition-transform duration-300 group-hover:scale-x-50 group-hover:duration-500"></span>
-                        <span className="absolute z-10 text-center text-white opacity-0 duration-100 ease-out group-hover:opacity-100 group-hover:duration-700">
-                          Edit profile
-                        </span>
+                  <Link to="/profile/edit">
+                    <Button className="group relative z-10 h-8 w-28 overflow-hidden rounded-md bg-sky-700 text-sm text-white">
+                      <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-white transition-transform duration-700 group-hover:scale-x-100 group-hover:duration-300"></span>
+                      <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-sky-700 transition-transform duration-500 group-hover:scale-x-100 group-hover:duration-700"></span>
+                      <span className="absolute -inset-8 origin-left rotate-12 scale-x-0 transform bg-sky-900 transition-transform duration-300 group-hover:scale-x-50 group-hover:duration-500"></span>
+                      <span className="absolute z-10 text-center text-white opacity-0 duration-100 ease-out group-hover:opacity-100 group-hover:duration-700">
                         Edit profile
-                      </Button>
-                    </Link>
-                  </>
-                ) : isFollowing ? (
-                  <>
-                    <Button variant="secondary" className="h-8">
-                      Unfollow
+                      </span>
+                      Edit profile
                     </Button>
-                    <Button variant="secondary" className="h-8">
-                      Message
-                    </Button>
-                  </>
+                  </Link>
                 ) : (
-                  <button className="text-md w-20 h-8 bg-teal-600 text-white relative overflow-hidden group z-10 hover:text-white duration-1000 rounded-md hover:cursor-pointer">
-                  <span className="absolute bg-teal-700 size-36 rounded-full group-hover:scale-100 scale-0 -z-10 -left-2 -top-10 group-hover:duration-500 duration-700 origin-center transform transition-all"></span>
-                  <span className="absolute bg-teal-900 size-36 -left-2 -top-10 rounded-full group-hover:scale-100 scale-0 -z-10 group-hover:duration-700 duration-500 origin-center transform transition-all"></span>
-                  Follow
-                </button>
+                  <>
+                    {suggestedUsers.map((user) => (
+                      <button
+                        key={user._id}
+                        onClick={() => followOrUnfollowHandler(user._id)}
+                        className="text-md w-20 h-8 bg-teal-600 text-white relative overflow-hidden group z-10 hover:text-white duration-1000 rounded-md hover:cursor-pointer"
+                      >
+                        <span className="absolute bg-teal-700 size-36 rounded-full group-hover:scale-100 scale-0 -z-10 -left-2 -top-10 group-hover:duration-500 duration-700 origin-center transform transition-all"></span>
+                        <span className="absolute bg-teal-900 size-36 -left-2 -top-10 rounded-full group-hover:scale-100 scale-0 -z-10 group-hover:duration-700 duration-500 origin-center transform transition-all"></span>
+                        {followingStatus[user._id] ? "Unfollow" : "Follow"}
+                      </button>
+                    ))}
+
+                    {/* {suggestedUsers.map((user) => (
+                      <div
+                        key={user._id}
+                        className="flex items-center justify-between mt-2"
+                      >
+                        {followingStatus[user._id] ? (
+                          <button
+                            onClick={() => followOrUnfollowHandler(user._id)}
+                            className="text-md w-28 h-8 bg-teal-600 text-white relative overflow-hidden group z-10 hover:text-white duration-1000 rounded-md hover:cursor-pointer"
+                          >
+                            <span className="absolute bg-teal-700 size-36 rounded-full group-hover:scale-100 scale-0 -z-10 -left-2 -top-10 group-hover:duration-500 duration-700 origin-center transform transition-all"></span>
+                            <span className="absolute bg-teal-900 size-36 -left-2 -top-10 rounded-full group-hover:scale-100 scale-0 -z-10 group-hover:duration-700 duration-500 origin-center transform transition-all"></span>
+                            Unfollow
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => followOrUnfollowHandler(user._id)}
+                            className="text-md w-28 h-8 bg-teal-600 text-white relative overflow-hidden group z-10 hover:text-white duration-1000 rounded-md hover:cursor-pointer"
+                          >
+                            <span className="absolute bg-teal-700 size-36 rounded-full group-hover:scale-100 scale-0 -z-10 -left-2 -top-10 group-hover:duration-500 duration-700 origin-center transform transition-all"></span>
+                            <span className="absolute bg-teal-900 size-36 -left-2 -top-10 rounded-full group-hover:scale-100 scale-0 -z-10 group-hover:duration-700 duration-500 origin-center transform transition-all"></span>
+                            Follow
+                          </button>
+                        )}
+                      </div>
+                    ))} */}
+                  </>
                 )}
               </div>
             </div>

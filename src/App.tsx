@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
-import { setSocket } from "@/redux/socketSlice"; 
+import { setSocket } from "@/redux/socketSlice";
 import { RootState } from "@/redux/store";
 import { router } from "./Router/router";
 import { setOnlineUsers } from "./redux/chatSlice";
@@ -16,27 +16,28 @@ function App() {
 
   useEffect(() => {
     let socketio: Socket | null = null;
-  
+
     if (user) {
       socketio = io("http://localhost:5000", {
         query: { userId: user?._id },
         transports: ["websocket"],
       });
-  
+
       socketio.on("connect_error", (error) => {
         console.error("Socket connection error:", error);
       });
-  
+
       socketio.on("getOnlineUsers", (onlineUsers) => {
         dispatch(setOnlineUsers(onlineUsers));
       });
-  
+
       socketio.on("notification", (notification) => {
+        console.log("Received notification:", notification);
         dispatch(setLikeNotification(notification));
       });
-  
+
       dispatch(setSocket(socketio));
-  
+
       return () => {
         if (socketio) {
           socketio.off("getOnlineUsers");
@@ -52,7 +53,6 @@ function App() {
       dispatch(setSocket(null));
     }
   }, [user, dispatch]);
-  
 
   return (
     <>
