@@ -20,15 +20,33 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
+interface User {
+  _id: string;
+  username: string;
+  bio?: string;
+  profilePicture?: string;
+}
+interface SuggestedUsersState {
+  suggestedUsers: User[];
+}
+
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.auth.user);
   const { likeNotification } = useSelector(
     (store: RootState) => store.realTimeNotification
+  );
+  const { suggestedUsers } = useSelector(
+    (store: { auth: SuggestedUsersState }) => store.auth
+  );
+
+  const filteredUsers = suggestedUsers.filter((user) =>
+    user.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // console.log(likeNotification);
@@ -108,16 +126,50 @@ const Sidebar: React.FC = () => {
             <hr className="my-6 border-slate-300" />
 
             {/* Search Input */}
-            <div className="flex items-center bg-[#c8e1e0]  p-2 mt-3 rounded-md">
-              <img
-                className="size-6"
-                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADRElEQVR4nO3Y22/TZhzG8dwNJOA6pVxNDWPAoNXKX4KAIiFNO4gAZWyM4xg0qlgHlGaitJQ0TsmBISH2BwxxQdWbFkWTQByEpqQLidODk7ImxGnjOOE7GVaxCyYx/MYmIo/0u/PF87Ff+7XtcDTSSCM1ST+s8mvsDOhIAZ3oFZ1MUKccrFAOVciEKkRDVfwR6AjASse7koESa30lRoZLFP0aSGUY0V/OlQoEjalC6J8JP4dIlWIYAtfAZVtxLywfKNJ3aQF9aBF8JRjW4I0RzyEC5Qj0BmGZpeUv5HH1qzy4WITBBbi0CCYQRGDiKjRZUr5Ppc1bIHNBhX4VBCLkEGyqaflzeVznc2S8z+DnAtQCEQRnTcp7Eiw7m+Nebx768lBDxO83YLlwwI9z9J35C87mwAJEt9DyngxrT2fRe56CFYgwFIQupS6Fke4snJ4DCxFDQsp75lh1SqHoyYCViHAVVciO/cMsO0/OQpcCliNgh2nA8WmkEzNgC6LKsGnAkTTR49NgC6LChGnAYZns0SmwAxGsoJgGfCejHU6DLYgKJdOAb1Noh2SwBaELABx4QvZgCuxAjOgCltD+BNFvkmATYsI0oHMS/9cJsAnhMw3YE6ej80+wAxHQ2GYasO8hK/bEUa1G+Eqog7DCISK74wT2ToLFCL9DVNxxXO44ZasQgwtoQ4t86BCZL2P0uuNgBWKgyBmH6Gy6fm/jtmhOqzmiwHg/fCC0fOutjOvjXx+nXeEou+4vUDPEM6a8RZqFlm8bzbW0j+XSrTdn+Oj6Izb8cpdd9xeFI87nSXkLfCK0/Bop1fLpaG58y1geYzb/Nv0C4QpG2RqdLwlDzDPeqwr+ndJ8WXY5pWR6TTCVbb89H1tCGFdi3Y3HcuvVh+u/itHtjqO+NSKL1vOUn4Sv+aXyTVIKY/6NaB/Ly22jSsvSsZ8lcLpjDP3PzU7tUhj2zAp+VL6u/CuEnDWWk3FP/NeOvTfGjs5JfPsT3DmQRDFexV98T8goR6e4c2yKy9/PsN2jCNph37S8MU4pKRv3hONdTXOjvE1pruczb8TpT8bqtryR1VLq8yYpWa3L8q9D1F35pawOpL5wSsk/6rJ8I428R/kbS3ZQJf3ee90AAAAASUVORK5CYII="
-              />
-              <input
-                type="text"
-                placeholder="Search"
-                className="ml-2 bg-transparent text-slate-800 focus:outline-none"
-              />
+            <div className="flex flex-col items-center mt-3">
+              <div className="flex items-center bg-[#c8e1e0] p-2 rounded-md w-full max-w-md">
+                <img
+                  className="w-6 h-6"
+                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADRElEQVR4nO3Y22/TZhzG8dwNJOA6pVxNDWPAoNXKX4KAIiFNO4gAZWyM4xg0qlgHlGaitJQ0TsmBISH2BwxxQdWbFkWTQByEpqQLidODk7ImxGnjOOE7GVaxCyYx/MYmIo/0u/PF87Ff+7XtcDTSSCM1ST+s8mvsDOhIAZ3oFZ1MUKccrFAOVciEKkRDVfwR6AjASse7koESa30lRoZLFP0aSGUY0V/OlQoEjalC6J8JP4dIlWIYAtfAZVtxLywfKNJ3aQF9aBF8JRjW4I0RzyEC5Qj0BmGZpeUv5HH1qzy4WITBBbi0CCYQRGDiKjRZUr5Ppc1bIHNBhX4VBCLkEGyqaflzeVznc2S8z+DnAtQCEQRnTcp7Eiw7m+Nebx768lBDxO83YLlwwI9z9J35C87mwAJEt9DyngxrT2fRe56CFYgwFIQupS6Fke4snJ4DCxFDQsp75lh1SqHoyYCViHAVVciO/cMsO0/OQpcCliNgh2nA8WmkEzNgC6LKsGnAkTTR49NgC6LChGnAYZns0SmwAxGsoJgGfCejHU6DLYgKJdOAb1Noh2SwBaELABx4QvZgCuxAjOgCltD+BNFvkmATYsI0oHMS/9cJsAnhMw3YE6ej80+wAxHQ2GYasO8hK/bEUa1G+Eqog7DCISK74wT2ToLFCL9DVNxxXO44ZasQgwtoQ4t86BCZL2P0uuNgBWKgyBmH6Gy6fm/jtmhOqzmiwHg/fCC0fOutjOvjXx+nXeEou+4vUDPEM6a8RZqFlm8bzbW0j+XSrTdn+Oj6Izb8cpdd9xeFI87nSXkLfCK0/Bop1fLpaG58y1geYzb/Nv0C4QpG2RqdLwlDzDPeqwr+ndJ8WXY5pWR6TTCVbb89H1tCGFdi3Y3HcuvVh+u/itHtjqO+NSKL1vOUn4Sv+aXyTVIKY/6NaB/Ly22jSsvSsZ8lcLpjDP3PzU7tUhj2zAp+VL6u/CuEnDWWk3FP/NeOvTfGjs5JfPsT3DmQRDFexV98T8goR6e4c2yKy9/PsN2jCNph37S8MU4pKRv3hONdTXOjvE1pruczb8TpT8bqtryR1VLq8yYpWa3L8q9D1F35pawOpL5wSsk/6rJ8I428R/kbS3ZQJf3ee90AAAAASUVORK5CYII="
+                />
+                <input
+                  type="text"
+                  placeholder="Search by username"
+                  className="ml-2 flex-grow bg-transparent text-slate-800 focus:outline-none"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+
+              {/* Display filtered users */}
+              {searchQuery && (
+                <div className="mt-3 w-full max-w-md">
+                  {filteredUsers.length > 0 ? (
+                    filteredUsers.map((user) => (
+                      <div
+                        key={user._id}
+                        className="mb-4 p-3 border border-gray-300 rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
+                      >
+                        <Link
+                          to={`/profile/${user._id}`}
+                          className="flex items-center space-x-2"
+                        >
+                          <img
+                            src={user.profilePicture || "default-avatar.png"} // Use a default image if profilePicture is not available
+                            alt={`${user.username}'s profile`}
+                            className="w-10 h-10 rounded-full border-2 border-teal-600"
+                          />
+                          <p className="text-lg font-semibold">
+                            {user.username}
+                          </p>
+                        </Link>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-slate-600">No users found.</p>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Menu Items */}
